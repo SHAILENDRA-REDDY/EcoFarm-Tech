@@ -66,17 +66,62 @@ jobs:
 
       - name: Smoke-test the container
         run: |
-          docker run -d --name ecofarm-ci -p 8080:8080 ecofarm-tech/dashboard:ci
-          for i in $(seq 1 20); do
-            if curl -fsS http://127.0.0.1:8080/ | grep -q "Eco Farm Tech"; then
-              echo "Container is serving the dashboard."
-              exit 0
+          set -u
+          container=ecofarm-ci
+
+          report() {
+            # Surface runtime details as annotations — job logs are not always available.
+            status=$(docker inspect -f '{{.State.Status}} exit={{.State.ExitCode}}' "$container" 2>&1 | tr -d '\n')
+            echo "::error::container state: ${status}"
+            tail_log=$(docker logs "$container" 2>&1 | tail -6 | tr '\n' '|' | tr -d '\r')
+            [ -n "$tail_log" ] && echo "::error::container log: ${tail_log}"
+            [ -n "$tail_log" ] && echo "$tail_log"
+            docker ps -a || true
+            docker logs "$container" || true
+          }
+
+          docker run -d --name "$container" -p 8080:8080 ecofarm-tech/dashboard:ci
+
+          ready=""
+          for i in $(seq 1 30); do
+            if [ "$(docker inspect -f '{{.State.Running}}' "$container" 2>/dev/null)" != "true" ]; then
+              echo "::error::container exited before it could serve a request (attempt ${i})."
+              report
+              exit 1
+            fi
+            code=$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:8080/ || true)
+            health=$(curl -s http://127.0.0.1:8080/healthz || true)
+            if [ "$code" = "200" ] && [ "$health" = "ok" ]; then
+              ready="yes"
+              break
             fi
             sleep 1
           done
-          echo "::error::Container did not serve the dashboard in time."
-          docker logs ecofarm-ci
-          exit 1
+
+          if [ -z "$ready" ]; then
+            echo "::error::container did not answer on :8080 within 30s (last status ${code:-none})."
+            report
+            exit 1
+          fi
+
+          if ! curl -fsS http://127.0.0.1:8080/ | grep -q "Eco Farm Tech"; then
+            echo "::error::response did not contain the dashboard title."
+            report
+            exit 1
+          fi
+
+          echo "✓ container serving the dashboard on :8080 (healthz=ok)"
+
+      - name: Check static asset serving
+        run: |
+          for path in /css/styles.css /js/app.js /js/data.js /assets/scene-crop.png; do
+            code=$(curl -s -o /dev/null -w '%{http_code}' "http://127.0.0.1:8080${path}")
+            echo "${path} → ${code}"
+            [ "$code" = "200" ] || { echo "::error::asset ${path} returned ${code}"; exit 1; }
+          done
+          type=$(curl -sI http://127.0.0.1:8080/css/styles.css | tr -d '\r' | awk -F': ' 'tolower($1)=="content-type"{print $2}')
+          echo "css content-type: ${type}"
+          case "$type" in text/css*) ;; *) echo "::error::CSS served with unexpected content-type: ${type}"; exit 1;; esac
 
       - name: Stop container
         if: always()

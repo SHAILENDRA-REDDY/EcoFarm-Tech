@@ -27,10 +27,16 @@ COPY js ./js
 COPY assets ./assets
 COPY LICENSE ./
 
-# nginx runs as an unprivileged user; cache and log paths must be writable
-RUN mkdir -p /var/cache/nginx /var/run \
- && chown -R nginx:nginx /usr/share/nginx/html /var/cache/nginx /var/run \
+# nginx runs as an unprivileged user: cache and pid paths must be writable by it.
+# The temp directories are created up front so the master process never needs to.
+RUN mkdir -p /var/cache/nginx/client_temp /var/cache/nginx/proxy_temp \
+             /var/cache/nginx/fastcgi_temp /var/cache/nginx/uwsgi_temp \
+             /var/cache/nginx/scgi_temp \
+ && chown -R nginx:nginx /var/cache/nginx \
  && chmod -R a+rX /usr/share/nginx/html
+
+# Fail the build (not the deployment) if the nginx configuration is invalid
+RUN nginx -t
 
 USER nginx
 EXPOSE 8080
@@ -39,4 +45,8 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
   CMD wget -q --spider http://127.0.0.1:8080/healthz || exit 1
 
 STOPSIGNAL SIGQUIT
+
+# Start nginx directly: the stock entrypoint scripts expect root and a
+# default.conf we deliberately replaced, so they add no value here.
+ENTRYPOINT []
 CMD ["nginx", "-g", "daemon off;"]

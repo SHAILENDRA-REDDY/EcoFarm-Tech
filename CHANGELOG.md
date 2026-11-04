@@ -38,6 +38,14 @@ this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Added explicit caveats for net metering, grid export credits and tariffs.
 
 ### Fixed
+- **Container smoke test failed in CI.** nginx exited before serving because the
+  server block bound IPv6 (`listen [::]:8080`) — unsupported on runtimes with IPv6
+  disabled — and the pid file lived in root-owned `/var/run`. The server now listens
+  on IPv4 only, keeps its pid under `/var/cache/nginx`, starts without the stock
+  entrypoint scripts, and the image runs `nginx -t` at build time so a broken
+  configuration fails the build instead of the deployment.
+- CI smoke test now waits for `/healthz`, checks every static asset and its MIME
+  type, and reports container state/logs as annotations when it fails.
 - Duplicate `DATA`/`PAGES` scope issue that could stop the dashboard booting if
   a script failed to load.
 - Leaf badge and centred highlighted title survive route changes.
