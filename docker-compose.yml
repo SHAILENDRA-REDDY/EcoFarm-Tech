@@ -1,0 +1,28 @@
+name: ecofarm-tech
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ecofarm-tech/dashboard:latest
+    container_name: ecofarm-dashboard
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:8080/healthz"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    labels:
+      org.opencontainers.image.title: "Eco Farm Tech Dashboard"
+      org.opencontainers.image.licenses: "MIT"
