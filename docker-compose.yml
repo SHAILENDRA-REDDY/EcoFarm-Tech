@@ -12,7 +12,6 @@ services:
     restart: unless-stopped
     read_only: true
     tmpfs:
-      - /var/cache/nginx
       - /tmp
     security_opt:
       - no-new-privileges:true
