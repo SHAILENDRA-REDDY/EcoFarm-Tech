@@ -21,24 +21,16 @@
     toastTimer = setTimeout(() => toastEl.classList.remove("show"), 2800);
   }
 
-  /* ----------------------------------------------------------------- clock */
-  const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-  function pad(n) { return String(n).padStart(2, "0"); }
-  function clockStrings(d) {
-    const time = `${((d.getHours() + 11) % 12) + 1}:${pad(d.getMinutes())} ${d.getHours() < 12 ? "AM" : "PM"}`;
-    return { date: `${pad(d.getDate())} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`, time };
-  }
-  function tickClock() {
-    const now = new Date();
-    const s = clockStrings(now);
-    const cd = $("#clockDate"), ct = $("#clockTime"), lu = $("#lastUpdated");
-    if (cd) cd.textContent = s.date;
-    if (ct) ct.textContent = s.time;
-    if (lu) lu.textContent = `${s.date} · ${s.time}`;
-  }
-  tickClock();
-  setInterval(tickClock, 20000);
+  /* ------------------------------------------------------- demo snapshot --- */
+  /* The dashboard is a fixed demo snapshot (04 Nov 2026, 12:30 PM) so the
+     headline figures, peak time and activity log stay consistent. */
+  const SNAPSHOT = { date: "04 Nov 2026", time: "12:30 PM" };
+  const clockDate = $("#clockDate"), clockTime = $("#clockTime"), lastUpdated = $("#lastUpdated");
+  if (clockDate) clockDate.textContent = SNAPSHOT.date;
+  if (clockTime) clockTime.textContent = SNAPSHOT.time;
+  if (lastUpdated) lastUpdated.textContent = SNAPSHOT.date + " · " + SNAPSHOT.time;
 
+  /* ------------------------------------------------------- shared data ----- */
   const DATA = window.EFT_DATA || { today: { labels: [], values: [] } };
   const PAGES = window.EFT_PAGES || {};
 
@@ -108,7 +100,7 @@
 
     const peak = cfg.peak;
     const peakMark = peak
-      ? `<circle cx="${x(peak.index).toFixed(2)}" cy="${y(values[peak.index]).toFixed(2)}" r="5" fill="#1e9e57" stroke="#fff" stroke-width="2.5"/>`
+      ? `<circle class="chart-peak" cx="${x(peak.index).toFixed(2)}" cy="${y(values[peak.index]).toFixed(2)}" r="5" stroke-width="2.5"/>`
       : "";
 
     container.innerHTML = `
@@ -123,7 +115,7 @@
         ${grid}
         ${xLabels}
         <path d="${area}" fill="url(#${gid})"/>
-        <path d="${line}" fill="none" stroke="#1e9e57" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+        <path class="chart-line" d="${line}" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
         ${peakMark}
         <line class="chart-hover-line" x1="0" y1="${pad.t}" x2="0" y2="${pad.t + plotH}"/>
         <circle class="chart-dot" r="4.5"/>
@@ -180,7 +172,7 @@
         stroke-dashoffset="${(-acc).toFixed(2)}"/>`;
       acc += (s.value / 100) * C;
     });
-    svg.innerHTML = `<circle cx="60" cy="60" r="${r}" fill="none" stroke="#eff5f1" stroke-width="15"/>${segs}`;
+    svg.innerHTML = `<circle class="donut-track" cx="60" cy="60" r="${r}" fill="none" stroke-width="15"/>${segs}`;
   }
 
   function drawBars(container, items) {
@@ -371,6 +363,225 @@
   window.addEventListener("scroll", () => {
     if (topbar) topbar.classList.toggle("scrolled", window.scrollY > 6);
   }, { passive: true });
+
+
+  /* =========================================================== dark mode === */
+  const themeBtn = $("#themeBtn");
+  const rootEl = document.documentElement;
+
+  function syncThemeButton() {
+    if (!themeBtn) return;
+    const dark = rootEl.getAttribute("data-theme") === "dark";
+    const use = themeBtn.querySelector("use");
+    if (use) use.setAttribute("href", dark ? "#i-sun" : "#i-moon");
+    themeBtn.setAttribute("aria-pressed", String(dark));
+    themeBtn.setAttribute("aria-label", dark ? "Switch to light mode" : "Switch to dark mode");
+    themeBtn.setAttribute("title", dark ? "Switch to light mode" : "Switch to dark mode");
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute("content", dark ? "#06120d" : "#0b3a28");
+  }
+
+  function setTheme(theme, persist) {
+    if (theme === "dark") rootEl.setAttribute("data-theme", "dark");
+    else rootEl.removeAttribute("data-theme");
+    if (persist !== false) {
+      try { localStorage.setItem("eft-theme", theme); } catch (e) {}
+    }
+    syncThemeButton();
+  }
+
+  if (themeBtn) {
+    themeBtn.addEventListener("click", () => {
+      const next = rootEl.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      setTheme(next);
+      toast(next === "dark" ? "Dark mode on" : "Light mode on");
+    });
+    syncThemeButton();
+  }
+
+  /* ===================================================== savings calculator */
+  const BIZ = window.EFT_BUSINESS || {};
+  const CALC = BIZ.calculator || {
+    defaults: { capacity: 10, panels: 18, dailyUse: 42, price: 4.2 },
+    panelWp: 550, fullOutputHours: 4.2, daysPerMonth: 30,
+    co2PerKwh: 0.82, treeAbsorbKg: 21, coalPerKwh: 0.5
+  };
+
+  const calcState = Object.assign({}, CALC.defaults);
+  const calcFields = $$("[data-calc]");
+
+  function inr(n, decimals) {
+    return n.toLocaleString("en-IN", { minimumFractionDigits: decimals || 0, maximumFractionDigits: decimals || 0 });
+  }
+  function round1(v) { return Math.round(v * 10) / 10; }
+  function clamp(v, min, max) { return Math.min(max, Math.max(min, v)); }
+
+  function paintCalculator() {
+    const { capacity, panels, dailyUse, price } = calcState;
+    const dailyGen = capacity * CALC.fullOutputHours;
+    const monthlyGen = dailyGen * CALC.daysPerMonth;
+    const monthlyUse = dailyUse * CALC.daysPerMonth;
+    const coverage = monthlyUse > 0 ? Math.min(100, (monthlyGen / monthlyUse) * 100) : 0;
+    const monthlySaving = Math.min(monthlyGen, monthlyUse) * price;
+    const annualGen = monthlyGen * 12;
+    const co2 = annualGen * CALC.co2PerKwh;
+    const coal = annualGen * CALC.coalPerKwh;
+
+    const set = (id, value) => { const el = document.getElementById(id); if (el) el.textContent = value; };
+    set("calcOutDaily", inr(dailyGen, 1));
+    set("calcOutMonthly", inr(monthlyGen));
+    set("calcOutValue", inr(monthlyGen * price));
+    set("calcOutMonthlySaving", inr(monthlySaving));
+    set("calcOutAnnualSaving", inr(monthlySaving * 12));
+    set("calcOutCoverage", inr(coverage));
+    set("capLabel", inr(capacity, 1) + " kW");
+    set("panelLabel", panels + " × " + CALC.panelWp + " Wp");
+    set("useLabel", inr(dailyUse) + " kWh");
+    set("priceLabel", "₹ " + price.toFixed(2) + " / unit");
+
+    const co2El = document.getElementById("impactCo2");
+    if (co2El) co2El.innerHTML = (co2 / 1000).toFixed(1) + " <small>t</small>";
+    const treeEl = document.getElementById("impactTrees");
+    if (treeEl) treeEl.textContent = inr(Math.round(co2 / CALC.treeAbsorbKg));
+    const coalEl = document.getElementById("impactCoal");
+    if (coalEl) coalEl.innerHTML = (coal / 1000).toFixed(1) + " <small>t</small>";
+    const shareEl = document.getElementById("impactShare");
+    if (shareEl) shareEl.innerHTML = inr(coverage) + "<small>%</small>";
+
+    calcFields.forEach((input) => {
+      const key = input.dataset.calc;
+      const target = key === "price" ? calcState.price.toFixed(2) : String(calcState[key]);
+      if (String(input.value) !== target) input.value = target;
+    });
+  }
+
+  if (calcFields.length) {
+    calcFields.forEach((input) => {
+      input.addEventListener("input", () => {
+        const key = input.dataset.calc;
+        const raw = parseFloat(input.value);
+        if (isNaN(raw)) return;
+
+        if (key === "panels") {
+          const panels = clamp(Math.round(raw), 1, 200);
+          calcState.panels = panels;
+          calcState.capacity = clamp(round1(panels * CALC.panelWp / 1000), 0.1, 100);
+        } else if (key === "capacity") {
+          const capacity = clamp(round1(raw), 0.1, 100);
+          calcState.capacity = capacity;
+          calcState.panels = clamp(Math.round((capacity * 1000) / CALC.panelWp), 1, 200);
+        } else if (key === "dailyUse") {
+          calcState.dailyUse = clamp(Math.round(raw), 1, 500);
+        } else if (key === "price") {
+          calcState.price = clamp(round1(raw), 0.1, 20);
+        }
+        paintCalculator();
+      });
+    });
+    paintCalculator();
+  }
+
+  /* ================================================= pricing & finance model */
+  const FIN = BIZ.finance;
+
+  function renderRevenueChart() {
+    const host = $("#revChart");
+    if (!host || !FIN) return;
+    const max = Math.max.apply(null, FIN.monthlyRevenueSeries.concat(FIN.monthlyExpenseSeries));
+    host.innerHTML = FIN.months.map((m, i) => {
+      const rev = FIN.monthlyRevenueSeries[i];
+      const exp = FIN.monthlyExpenseSeries[i];
+      return `<div class="duo" title="${m}: revenue ₹${inr(rev)}, expenses ₹${inr(exp)}">
+        <span>${m}</span>
+        <div class="track">
+          <div class="fill" style="width:${((rev / max) * 100).toFixed(1)}%"></div>
+          <div class="fill alt" style="width:${((exp / max) * 100).toFixed(1)}%"></div>
+        </div>
+      </div>`;
+    }).join("");
+  }
+
+  function paintFinance(key) {
+    if (!FIN) return;
+    const model = FIN[key] || FIN.singleFarm;
+    const revenueTotal = model.revenue + model.subscription;
+    const expenseTotal = model.maintenance + model.employee + model.other;
+    const surplus = revenueTotal - expenseTotal;
+    const rows = [
+      { label: "Electricity revenue (pay-per-use)", value: model.revenue, dot: "#1e9e57" },
+      { label: "Monitoring subscriptions", value: model.subscription, dot: "#3d8fdd" },
+      { label: "Maintenance expense", value: -model.maintenance, dot: "#f0b429" },
+      { label: "Employee expense", value: -model.employee, dot: "#f0b429" },
+      { label: "Other expenses", value: -model.other, dot: "#b3c4ba" }
+    ];
+    const host = $("#finRows");
+    if (host) {
+      host.innerHTML = rows.map((r) => `<div class="fin-row">
+        <span class="fin-label"><span class="dot" style="background:${r.dot}"></span>${r.label}</span>
+        <b>${r.value < 0 ? "− " : ""}₹ ${inr(Math.abs(r.value))}</b>
+      </div>`).join("") + `<div class="fin-row total">
+        <span class="fin-label">Illustrative operating surplus</span><b>₹ ${inr(surplus)} / month</b>
+      </div>`;
+    }
+    const annualSurplus = surplus * 12;
+    const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+    set("finInvestment", inr(FIN.initialInvestment));
+    set("finSurplus", inr(annualSurplus));
+    set("finBreakEven", annualSurplus > 0 ? (FIN.initialInvestment / annualSurplus).toFixed(1) : "—");
+    set("finModel", key === "scaled" ? "Three farms" : "Single farm");
+    const note = $("#finNote");
+    if (note) {
+      note.textContent = key === "scaled"
+        ? "Same unit economics applied to three monitored farms: revenue and costs both scale, and the larger surplus shortens the payback period."
+        : "Sample operating model for one monitored farm: electricity revenue plus subscription income, less maintenance, staff and other costs.";
+    }
+    $$("[data-fin]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.fin === key)));
+  }
+
+  if (FIN) {
+    renderRevenueChart();
+    paintFinance("singleFarm");
+    $$("[data-fin]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        paintFinance(btn.dataset.fin);
+        $$("[data-fin]").forEach((b) => b.classList.toggle("is-active", b.dataset.fin === btn.dataset.fin));
+      });
+    });
+  }
+
+  /* ============================================== farmer enquiry (demo only) */
+  const enquiryForm = $("#enquiryForm");
+  if (enquiryForm) {
+    enquiryForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const required = $$("[required]", enquiryForm);
+      let firstInvalid = null;
+      required.forEach((field) => {
+        const ok = field.type === "checkbox" ? field.checked : String(field.value).trim().length > 0;
+        field.style.borderColor = ok ? "" : "#d9534f";
+        if (!ok && !firstInvalid) firstInvalid = field;
+      });
+      if (firstInvalid) {
+        firstInvalid.focus();
+        toast("Please complete the highlighted required fields.");
+        return;
+      }
+      const panel = $("#enquirySuccess");
+      const ref = $("#enquiryRef");
+      const name = (enquiryForm.querySelector('[name="name"]') || {}).value || "farmer";
+      if (ref) {
+        ref.textContent = "Reference EFT-DEMO-" + Math.floor(1000 + Math.random() * 8999) +
+          " · Thank you, " + name.trim().split(" ")[0] + ". Nothing was transmitted — this prototype stops at validation.";
+      }
+      if (panel) {
+        panel.classList.add("show");
+        if (typeof panel.scrollIntoView === "function") {
+          panel.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      }
+      toast("Estimate request prepared (demo — no data sent).");
+    });
+  }
 
   /* ------------------------------------------------------------------- boot */
   renderCharts();

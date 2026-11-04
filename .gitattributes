@@ -1,0 +1,39 @@
+# Normalise line endings so the repository checks out cleanly everywhere
+* text=auto eol=lf
+
+# Explicit text types
+*.html   text eol=lf
+*.css    text eol=lf
+*.js     text eol=lf
+*.json   text eol=lf
+*.md     text eol=lf
+*.yml    text eol=lf
+*.yaml   text eol=lf
+*.conf   text eol=lf
+Dockerfile        text eol=lf
+Makefile          text eol=lf
+LICENSE           text eol=lf
+
+# Binary assets — never diff, never convert
+*.png    binary
+*.jpg    binary
+*.jpeg   binary
+*.gif    binary
+*.webp   binary
+*.ico    binary
+*.pdf    binary
+*.woff   binary
+*.woff2  binary
+
+# Keep generated/vendored files out of language statistics
+assets/*      linguist-documentation=false
+README.md     linguist-detectable=false
+docs/*        linguist-documentation=true
+
+# Export-ignore: keep repository tooling out of release archives
+.github/          export-ignore
+.dockerignore     export-ignore
+.gitattributes    export-ignore
+.gitignore        export-ignore
+Makefile          export-ignore
+docker-compose.yml export-ignore

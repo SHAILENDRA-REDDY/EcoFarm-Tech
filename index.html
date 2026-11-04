@@ -9,6 +9,15 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700&family=Sora:wght@500;600;700&display=swap" rel="stylesheet" />
+<script>
+  // apply the saved colour scheme before first paint (no flash of light UI)
+  (function () {
+    try {
+      var saved = localStorage.getItem("eft-theme");
+      if (saved === "dark") document.documentElement.setAttribute("data-theme", "dark");
+    } catch (e) {}
+  })();
+</script>
 <link rel="stylesheet" href="css/styles.css" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230b3a28'/%3E%3Cpath d='M16 25v-8' stroke='%2345c07c' stroke-width='2.4' stroke-linecap='round'/%3E%3Cpath d='M16 17c0-3.9-3.1-7-7-7 0 3.9 3.1 7 7 7z' fill='%2345c07c'/%3E%3Cpath d='M16 17c0-4.4 3.6-8 8-8 0 4.4-3.6 8-8 8z' fill='%23a7e5c2'/%3E%3C/svg%3E" />
 </head>
@@ -61,6 +70,14 @@
     <symbol id="i-edit" viewBox="0 0 24 24"><path d="M16.4 3.8l3.8 3.8L8.6 19.2l-4.8 1 1-4.8z"/><path d="m14 6.2 3.8 3.8"/></symbol>
     <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4.4" y="10.4" width="15.2" height="10.2" rx="2.4"/><path d="M8.2 10.4V7.6a3.8 3.8 0 0 1 7.6 0v2.8"/></symbol>
     <symbol id="i-truck" viewBox="0 0 24 24"><path d="M2.8 6.4h10.4v10H2.8z"/><path d="M13.2 9.6h4l3.2 3.4v3.4h-7.2"/><circle cx="6.6" cy="18.2" r="1.8"/><circle cx="16.6" cy="18.2" r="1.8"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20.6 14.4A8.7 8.7 0 0 1 9.6 3.4 8.7 8.7 0 1 0 20.6 14.4z"/></symbol>
+    <symbol id="i-tag" viewBox="0 0 24 24"><path d="M20.6 12.4 12.5 20.5a2 2 0 0 1-2.8 0L3.5 14.3V4.5a1 1 0 0 1 1-1h9.8l6.3 6.3a2 2 0 0 1 0 2.6z"/><circle cx="8.2" cy="8.2" r="1.3"/></symbol>
+    <symbol id="i-send" viewBox="0 0 24 24"><path d="M21.2 3.4 2.9 10.6l7.2 3.3 3.3 7.2z"/><path d="M21.2 3.4 10.1 13.9"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.8"/><path d="M3.4 12h17.2"/><path d="M12 3.2c2.4 2.4 3.7 5.5 3.7 8.8S14.4 18.4 12 20.8c-2.4-2.4-3.7-5.5-3.7-8.8S9.6 5.6 12 3.2z"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9.2" cy="8" r="3.4"/><path d="M2.8 20c1-3.3 3.4-5 6.4-5s5.4 1.7 6.4 5"/><path d="M16.2 5.2a3.2 3.2 0 0 1 0 6.2M18 20c-.3-2.3-1.2-4-2.6-5"/></symbol>
+    <symbol id="i-calculator" viewBox="0 0 24 24"><rect x="5" y="2.8" width="14" height="18.4" rx="2.4"/><path d="M8.4 7h7.2"/><circle cx="8.7" cy="11.4" r=".85"/><circle cx="12" cy="11.4" r=".85"/><circle cx="15.3" cy="11.4" r=".85"/><circle cx="8.7" cy="15" r=".85"/><circle cx="12" cy="15" r=".85"/><circle cx="15.3" cy="15" r=".85"/><circle cx="8.7" cy="18.4" r=".85"/><circle cx="12" cy="18.4" r=".85"/><circle cx="15.3" cy="18.4" r=".85"/></symbol>
+    <symbol id="i-rupee" viewBox="0 0 24 24"><path d="M6.6 4.2h10.8M6.6 8.8h10.8M15.2 4.2c0 4.3-2.7 6.6-6.8 6.6H6.6l7.6 9.8"/></symbol>
+    <symbol id="i-tree" viewBox="0 0 24 24"><path d="M12 21v-4.6"/><path d="M12 3.2 6.4 11h3L5.6 16.4h12.8L14.6 11h3z"/></symbol>
     <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3.4" y="3.4" width="7.2" height="7.2" rx="1.8"/><rect x="13.4" y="3.4" width="7.2" height="7.2" rx="1.8"/><rect x="3.4" y="13.4" width="7.2" height="7.2" rx="1.8"/><rect x="13.4" y="13.4" width="7.2" height="7.2" rx="1.8"/></symbol>
   </defs>
 </svg>
@@ -86,6 +103,12 @@
       <a class="nav-item" href="#solar" data-page="solar"><svg class="icon"><use href="#i-sun"/></svg><span>Solar Power</span></a>
       <a class="nav-item" href="#monitoring" data-page="monitoring"><svg class="icon"><use href="#i-sprout"/></svg><span>Farm Monitoring</span></a>
       <a class="nav-item" href="#irrigation" data-page="irrigation"><svg class="icon"><use href="#i-droplet"/></svg><span>Irrigation Control</span></a>
+
+      <div class="nav-label">Business</div>
+      <a class="nav-item" href="#calculator" data-page="calculator"><svg class="icon"><use href="#i-calculator"/></svg><span>Savings &amp; Impact</span></a>
+      <a class="nav-item" href="#business" data-page="business"><svg class="icon"><use href="#i-tag"/></svg><span>Pricing &amp; Revenue</span></a>
+      <a class="nav-item" href="#register" data-page="register"><svg class="icon"><use href="#i-users"/></svg><span>Farmer Registration</span></a>
+      <a class="nav-item" href="#about" data-page="about"><svg class="icon"><use href="#i-globe"/></svg><span>About</span></a>
 
       <div class="nav-label">Insights</div>
       <a class="nav-item" href="#reports" data-page="reports"><svg class="icon"><use href="#i-chart"/></svg><span>Reports</span></a>
@@ -119,12 +142,17 @@
       </div>
 
       <div class="topbar-actions">
-        <div class="clock">
+        <div class="clock" title="Fixed demo snapshot — not a live reading">
           <svg class="icon"><use href="#i-calendar"/></svg>
           <span id="clockDate">04 Nov 2026</span>
           <span class="sep"></span>
-          <span id="clockTime">10:24 AM</span>
+          <span id="clockTime">12:30 PM</span>
+          <span class="demo-chip">Demo</span>
         </div>
+
+        <button class="icon-btn theme-btn" id="themeBtn" type="button" aria-label="Switch to dark mode" aria-pressed="false" title="Toggle dark mode">
+          <svg class="icon"><use href="#i-moon"/></svg>
+        </button>
 
         <div class="dropdown">
           <button class="icon-btn" id="bellBtn" aria-label="Notifications (3 unread)" aria-expanded="false">
@@ -257,7 +285,7 @@
               </div>
               <div class="info-row">
                 <span class="info-ico"><svg class="icon"><use href="#i-panel"/></svg></span>
-                <div><dt>System Capacity</dt><dd>10 kW</dd></div>
+                <div><dt>System Capacity</dt><dd>9.9 kWp<small>18 × 550 Wp modules</small></dd></div>
               </div>
               <div class="info-row">
                 <span class="info-ico"><svg class="icon"><use href="#i-device"/></svg></span>
@@ -326,7 +354,7 @@
             <ul class="activity">
               <li class="act-row">
                 <span class="act-ico amber"><svg class="icon"><use href="#i-sun"/></svg></span>
-                <div class="act-body"><strong>Solar power generated</strong><span>Today · 10:22 AM</span></div>
+                <div class="act-body"><strong>Solar power generated</strong><span>Today · 12:22 PM</span></div>
                 <div class="act-value">8.5 kW<span>current</span></div>
               </li>
               <li class="act-row">
@@ -391,18 +419,23 @@
         <div class="owner-hero">
           <div class="owner-avatar">SR</div>
           <div class="owner-id">
-            <h2>Shailendra Reddy <span class="pill"><svg class="icon" style="width:12px;height:12px"><use href="#i-shield"/></svg> Verified owner</span></h2>
+            <h2>Shailendra Reddy <span class="pill amber"><svg class="icon" style="width:12px;height:12px"><use href="#i-info"/></svg> Demo profile</span></h2>
             <p class="role">Farm Owner &amp; Operator · Green Valley Farm, Kurnool</p>
             <div class="owner-tags">
-              <span class="pill gray"><svg class="icon" style="width:12px;height:12px"><use href="#i-idcard"/></svg> Owner ID EFT-OWN-1042</span>
+              <span class="pill gray"><svg class="icon" style="width:12px;height:12px"><use href="#i-idcard"/></svg> Owner ID EFT-OWN-••••</span>
               <span class="pill blue"><svg class="icon" style="width:12px;height:12px"><use href="#i-card"/></svg> Pay-per-use plan</span>
-              <span class="pill amber"><svg class="icon" style="width:12px;height:12px"><use href="#i-calendar"/></svg> Member since Mar 2024</span>
+              <span class="pill gray"><svg class="icon" style="width:12px;height:12px"><use href="#i-calendar"/></svg> Member since Mar 2024 (sample)</span>
             </div>
           </div>
           <div class="owner-hero-actions">
             <button class="btn btn-ghost" data-toast="Demo prototype — profile editing is disabled."><svg class="icon"><use href="#i-edit"/></svg> Edit details</button>
-            <button class="btn btn-primary" data-toast="Statement download started (demo file)."><svg class="icon"><use href="#i-download"/></svg> Statement</button>
+            <button class="btn btn-primary" data-toast="Sample statement downloaded (demo file)."><svg class="icon"><use href="#i-download"/></svg> Statement</button>
           </div>
+        </div>
+
+        <div class="note" style="margin-bottom:16px">
+          <svg class="icon"><use href="#i-shield"/></svg>
+          <span><strong>Privacy note.</strong> This is a fictional demonstration profile created for the Eco Farm Tech student prototype. Phone numbers, email addresses, street addresses, coordinates, consumer numbers and emergency contacts are deliberately not published. Personal contact details are visible only to the signed-in account holder in a real deployment.</span>
         </div>
 
         <div class="two-col" style="margin-bottom:16px">
@@ -411,20 +444,19 @@
               <svg class="icon"><use href="#i-user"/></svg>
               <h3>Owner Details</h3>
               <span class="spacer"></span>
-              <span class="pill gray">Primary account holder</span>
+              <span class="pill amber">Sample data</span>
             </div>
             <dl class="detail-grid">
               <div class="detail"><dt>Full name</dt><dd>Shailendra Reddy</dd></div>
-              <div class="detail"><dt>Owner / customer ID</dt><dd>EFT-OWN-1042</dd></div>
-              <div class="detail"><dt>Mobile number</dt><dd>+91 98••• ••210 <small>(verified)</small></dd></div>
-              <div class="detail"><dt>Email address</dt><dd>s.reddy@greenvalleyfarm.in</dd></div>
+              <div class="detail"><dt>Owner / customer ID</dt><dd>EFT-OWN-•••• <small>(masked in demo)</small></dd></div>
               <div class="detail"><dt>Role</dt><dd>Owner &amp; farm operator</dd></div>
+              <div class="detail"><dt>Account type</dt><dd>Individual farm account</dd></div>
               <div class="detail"><dt>Preferred language</dt><dd>English · తెలుగు</dd></div>
-              <div class="detail" style="grid-column:1/-1"><dt>Address</dt><dd>Survey No. 142/2, Green Valley Farm, Nandyal Road,<br />Kurnool district, Andhra Pradesh — 518001, India</dd></div>
-              <div class="detail"><dt>Emergency contact</dt><dd>Lakshmi Reddy · +91 90••• ••844</dd></div>
-              <div class="detail"><dt>KYC status</dt><dd><span class="pill">Verified</span></dd></div>
-              <div class="detail"><dt>Registered on</dt><dd>18 March 2024</dd></div>
-              <div class="detail"><dt>Last login</dt><dd>Today · 09:58 AM</dd></div>
+              <div class="detail"><dt>Registered on</dt><dd>18 March 2024 <small>(sample)</small></dd></div>
+              <div class="detail"><dt>Last login</dt><dd>Today · 12:04 PM</dd></div>
+              <div class="detail"><dt>KYC status</dt><dd><span class="pill gray">Sample verification</span></dd></div>
+              <div class="detail" style="grid-column:1/-1"><dt>Contact details</dt><dd>Held privately by the account holder — not displayed in this prototype.</dd></div>
+              <div class="detail" style="grid-column:1/-1"><dt>Service region</dt><dd>Kurnool district, Andhra Pradesh <small>(district level only)</small></dd></div>
             </dl>
           </article>
 
@@ -432,20 +464,22 @@
             <div class="card-head">
               <svg class="icon"><use href="#i-card"/></svg>
               <h3>Subscription &amp; Billing</h3>
+              <span class="spacer"></span>
+              <span class="pill amber">Fictional invoices</span>
             </div>
             <dl class="detail-grid">
               <div class="detail"><dt>Plan</dt><dd>Pay-per-use (monitored)</dd></div>
               <div class="detail"><dt>Applicable tariff</dt><dd>₹ 4.20 / kWh <small>illustrative</small></dd></div>
               <div class="detail"><dt>Dashboard access</dt><dd>Included · monthly</dd></div>
               <div class="detail"><dt>Billing cycle</dt><dd>1st – last day of month</dd></div>
-              <div class="detail"><dt>Last invoice</dt><dd>₹ 2,864 · Oct 2026</dd></div>
-              <div class="detail"><dt>Next invoice</dt><dd>01 Dec 2026</dd></div>
-              <div class="detail"><dt>Payment method</dt><dd>UPI · ****@okaxis</dd></div>
-              <div class="detail"><dt>Account standing</dt><dd><span class="pill">Up to date</span></dd></div>
+              <div class="detail"><dt>Last invoice</dt><dd>Sample invoice · Oct 2026</dd></div>
+              <div class="detail"><dt>Next invoice</dt><dd>01 Dec 2026 <small>(sample)</small></dd></div>
+              <div class="detail"><dt>Payment method</dt><dd>UPI <small>(masked)</small></dd></div>
+              <div class="detail"><dt>Account standing</dt><dd><span class="pill gray">Up to date (sample)</span></dd></div>
             </dl>
             <div class="note" style="margin-top:16px">
               <svg class="icon"><use href="#i-info"/></svg>
-              <span>Tariffs and invoices are demo values. Any real electricity tariff or sale price must be checked against applicable regulations.</span>
+              <span>Tariffs, invoices and payment states are illustrative. Any real electricity tariff, sale price or grid credit depends on the applicable regulations and the signed agreement.</span>
             </div>
           </article>
         </div>
@@ -454,19 +488,21 @@
           <article class="card">
             <div class="card-head">
               <svg class="icon"><use href="#i-sprout"/></svg>
-              <h3>Farm Details</h3>
+              <h3>Farm Profile</h3>
+              <span class="spacer"></span>
+              <span class="pill gray">Fictional farm</span>
             </div>
             <dl class="detail-grid">
               <div class="detail"><dt>Farm name</dt><dd>Green Valley Farm</dd></div>
-              <div class="detail"><dt>Survey / plot no.</dt><dd>142/2, 142/3</dd></div>
+              <div class="detail"><dt>District / state</dt><dd>Kurnool · Andhra Pradesh</dd></div>
               <div class="detail"><dt>Total area</dt><dd>8.5 acres</dd></div>
               <div class="detail"><dt>Net irrigated area</dt><dd>6.2 acres</dd></div>
               <div class="detail"><dt>Soil type</dt><dd>Red loam</dd></div>
               <div class="detail"><dt>Water source</dt><dd>Borewell + farm pond</dd></div>
               <div class="detail"><dt>Crops grown</dt><dd>Tomato, chilli, leafy vegetables</dd></div>
               <div class="detail"><dt>Irrigation method</dt><dd>Sprinkler &amp; drip</dd></div>
-              <div class="detail"><dt>Village / mandal</dt><dd>Nandyal Road · Kurnool</dd></div>
-              <div class="detail"><dt>Coordinates</dt><dd>15.8281° N, 78.0373° E</dd></div>
+              <div class="detail"><dt>Primary energy use</dt><dd>Irrigation pump + lighting</dd></div>
+              <div class="detail"><dt>Connected load</dt><dd>3 HP pump · 1.2 kW lighting</dd></div>
             </dl>
           </article>
 
@@ -474,18 +510,20 @@
             <div class="card-head">
               <svg class="icon"><use href="#i-panel"/></svg>
               <h3>Solar System Details</h3>
+              <span class="spacer"></span>
+              <span class="pill gray">Illustrative system</span>
             </div>
             <dl class="detail-grid">
-              <div class="detail"><dt>Installed capacity</dt><dd>10 kWp</dd></div>
-              <div class="detail"><dt>Commissioned on</dt><dd>12 June 2024</dd></div>
+              <div class="detail"><dt>Installed capacity</dt><dd>9.9 kWp <small>(18 × 550 Wp)</small></dd></div>
+              <div class="detail"><dt>Commissioned on</dt><dd>12 June 2024 <small>(sample)</small></dd></div>
               <div class="detail"><dt>Modules</dt><dd>18 × 550 Wp monocrystalline</dd></div>
               <div class="detail"><dt>Inverter</dt><dd>10 kW hybrid, string type</dd></div>
               <div class="detail"><dt>Battery (optional)</dt><dd>5 kWh LFP · 82% charge</dd></div>
               <div class="detail"><dt>Mounting</dt><dd>Ground mount, fixed tilt 15°</dd></div>
-              <div class="detail"><dt>DISCOM consumer no.</dt><dd>4412 8890 21 · APSPDCL</dd></div>
-              <div class="detail"><dt>Metering</dt><dd>Net metering, bidirectional</dd></div>
+              <div class="detail"><dt>DISCOM</dt><dd>APSPDCL <small>(no consumer number published)</small></dd></div>
+              <div class="detail"><dt>Metering</dt><dd>Net metering, subject to approval</dd></div>
               <div class="detail"><dt>Warranty</dt><dd>Panels 25 yrs · Inverter 5 yrs</dd></div>
-              <div class="detail"><dt>System status</dt><dd><span class="pill">Normal</span></dd></div>
+              <div class="detail"><dt>System status</dt><dd><span class="pill">Normal (sample)</span></dd></div>
             </dl>
           </article>
         </div>
@@ -495,12 +533,14 @@
             <div class="card-head">
               <svg class="icon"><use href="#i-file"/></svg>
               <h3>Documents</h3>
+              <span class="spacer"></span>
+              <span class="pill amber">Samples</span>
             </div>
             <div class="doc-list">
-              <button class="doc" data-toast="Opening agreement (demo)."><span class="doc-ico"><svg class="icon"><use href="#i-file"/></svg></span><span><strong>Service agreement</strong><span>PDF · 240 KB · 18 Mar 2024</span></span><svg class="icon icon-sm"><use href="#i-download"/></svg></button>
-              <button class="doc" data-toast="Opening net-metering approval (demo)."><span class="doc-ico"><svg class="icon"><use href="#i-file"/></svg></span><span><strong>Net-metering approval</strong><span>PDF · 180 KB · 02 Jun 2024</span></span><svg class="icon icon-sm"><use href="#i-download"/></svg></button>
-              <button class="doc" data-toast="Opening warranty card (demo)."><span class="doc-ico"><svg class="icon"><use href="#i-file"/></svg></span><span><strong>Panel warranty card</strong><span>PDF · 96 KB · 12 Jun 2024</span></span><svg class="icon icon-sm"><use href="#i-download"/></svg></button>
-              <button class="doc" data-toast="Opening insurance policy (demo)."><span class="doc-ico"><svg class="icon"><use href="#i-shield"/></svg></span><span><strong>Insurance policy</strong><span>PDF · 320 KB · 01 Jul 2026</span></span><svg class="icon icon-sm"><use href="#i-download"/></svg></button>
+              <button class="doc" data-toast="Sample document — no real file is stored."><span class="doc-ico"><svg class="icon"><use href="#i-file"/></svg></span><span><strong>Service agreement</strong><span>Sample · 18 Mar 2024</span></span><svg class="icon icon-sm"><use href="#i-download"/></svg></button>
+              <button class="doc" data-toast="Sample document — no real file is stored."><span class="doc-ico"><svg class="icon"><use href="#i-file"/></svg></span><span><strong>Net-metering approval</strong><span>Sample · 02 Jun 2024</span></span><svg class="icon icon-sm"><use href="#i-download"/></svg></button>
+              <button class="doc" data-toast="Sample document — no real file is stored."><span class="doc-ico"><svg class="icon"><use href="#i-file"/></svg></span><span><strong>Panel warranty card</strong><span>Sample · 12 Jun 2024</span></span><svg class="icon icon-sm"><use href="#i-download"/></svg></button>
+              <button class="doc" data-toast="Sample document — no real file is stored."><span class="doc-ico"><svg class="icon"><use href="#i-shield"/></svg></span><span><strong>Insurance policy</strong><span>Sample · 01 Jul 2026</span></span><svg class="icon icon-sm"><use href="#i-download"/></svg></button>
             </div>
           </article>
 
@@ -510,13 +550,13 @@
               <h3>Service &amp; Support</h3>
             </div>
             <dl class="detail-grid" style="grid-template-columns:minmax(0,1fr)">
-              <div class="detail"><dt>Assigned technician</dt><dd>Ravi Kumar · Field engineer</dd></div>
-              <div class="detail"><dt>Support number</dt><dd>+91 80••• ••145</dd></div>
+              <div class="detail"><dt>Assigned technician</dt><dd>Field engineer (assigned)</dd></div>
               <div class="detail"><dt>Response time</dt><dd>Within 24 hours (working days)</dd></div>
               <div class="detail"><dt>Last service visit</dt><dd>22 Sep 2026 · panel cleaning</dd></div>
               <div class="detail"><dt>Next scheduled visit</dt><dd>18 Nov 2026 · inverter inspection</dd></div>
+              <div class="detail"><dt>How to reach support</dt><dd>In-app service request or the contact form on the About page</dd></div>
             </dl>
-            <button class="btn btn-ghost btn-sm" style="margin-top:14px" data-toast="Service request raised (demo)."><svg class="icon"><use href="#i-phone"/></svg> Request service</button>
+            <a class="btn btn-ghost btn-sm" style="margin-top:14px" href="#register"><svg class="icon"><use href="#i-phone"/></svg> Request service</a>
           </article>
 
           <article class="card">
@@ -525,8 +565,8 @@
               <h3>Account Activity</h3>
             </div>
             <ul class="activity">
-              <li class="act-row"><span class="act-ico green"><svg class="icon"><use href="#i-check"/></svg></span><div class="act-body"><strong>Monthly statement generated</strong><span>01 Nov 2026</span></div></li>
-              <li class="act-row"><span class="act-ico blue"><svg class="icon"><use href="#i-card"/></svg></span><div class="act-body"><strong>Invoice paid via UPI</strong><span>03 Nov 2026 · ₹ 2,864</span></div></li>
+              <li class="act-row"><span class="act-ico green"><svg class="icon"><use href="#i-check"/></svg></span><div class="act-body"><strong>Monthly statement generated</strong><span>01 Nov 2026 (sample)</span></div></li>
+              <li class="act-row"><span class="act-ico blue"><svg class="icon"><use href="#i-card"/></svg></span><div class="act-body"><strong>Invoice paid via UPI</strong><span>03 Nov 2026 · sample amount</span></div></li>
               <li class="act-row"><span class="act-ico amber"><svg class="icon"><use href="#i-bell"/></svg></span><div class="act-body"><strong>Alert threshold updated</strong><span>28 Oct 2026 · low battery 20%</span></div></li>
               <li class="act-row"><span class="act-ico violet"><svg class="icon"><use href="#i-wrench"/></svg></span><div class="act-body"><strong>Service visit completed</strong><span>22 Sep 2026 · panel cleaning</span></div></li>
             </ul>
@@ -547,7 +587,7 @@
           </article>
           <article class="stat blue">
             <div class="stat-top"><span class="stat-ico"><svg class="icon"><use href="#i-calendar"/></svg></span><span class="stat-label">This Month</span></div>
-            <p class="stat-value">1,046<span>kWh</span></p><p class="stat-sub">Across 22 generation days</p>
+            <p class="stat-value">168.4<span>kWh</span></p><p class="stat-sub">Month to date · 4 generation days</p>
           </article>
           <article class="stat violet">
             <div class="stat-top"><span class="stat-ico"><svg class="icon"><use href="#i-gauge"/></svg></span><span class="stat-label">Performance Ratio</span></div>
@@ -661,6 +701,14 @@
         </div>
       </section>
 
+        <article class="card" style="margin-top:16px">
+          <div class="card-head"><svg class="icon"><use href="#i-info"/></svg><h3>Grid export, net metering &amp; export credits</h3></div>
+          <p style="font-size:12.3px;color:var(--muted);line-height:1.6;max-width:88ch">
+            The 11.9 kWh shown as exported is an illustrative share of today&rsquo;s generation. In practice, any export to the grid — and any credit for it — depends on DISCOM approval, the net-metering or net-billing rules in force, the sanctioned load and the signed interconnection agreement. Export is therefore shown for information only and is not a promise of income or credit.
+          </p>
+        </article>
+      </section>
+
       <!-- =========================== FARM MONITORING ========================= -->
       <section class="page" id="page-monitoring">
         <div class="stat-grid">
@@ -684,7 +732,7 @@
 
         <div class="two-col" style="margin-bottom:16px">
           <article class="card">
-            <div class="card-head"><svg class="icon"><use href="#i-sprout"/></svg><h3>Field Zones</h3><span class="spacer"></span><span class="pill gray">Updated 10:24 AM</span></div>
+            <div class="card-head"><svg class="icon"><use href="#i-sprout"/></svg><h3>Field Zones</h3><span class="spacer"></span><span class="pill gray">Updated 12:30 PM</span></div>
             <div class="table-wrap">
               <table>
                 <thead><tr><th>Zone</th><th>Crop</th><th>Moisture</th><th>Soil temp</th><th>Status</th></tr></thead>
@@ -849,19 +897,19 @@
         <div class="stat-grid">
           <article class="stat green">
             <div class="stat-top"><span class="stat-ico"><svg class="icon"><use href="#i-zap"/></svg></span><span class="stat-label">Generated (Nov 2026)</span></div>
-            <p class="stat-value">1,046<span>kWh</span></p><p class="stat-sub">22 generation days</p>
+            <p class="stat-value">168.4<span>kWh</span></p><p class="stat-sub">Month to date · 4 generation days</p>
           </article>
           <article class="stat blue">
             <div class="stat-top"><span class="stat-ico"><svg class="icon"><use href="#i-droplet"/></svg></span><span class="stat-label">Consumed on farm</span></div>
-            <p class="stat-value">682<span>kWh</span></p><p class="stat-sub">Pump 68% · other loads 32%</p>
+            <p class="stat-value">109.2<span>kWh</span></p><p class="stat-sub">Pump 68% · other loads 32%</p>
           </article>
           <article class="stat amber">
             <div class="stat-top"><span class="stat-ico"><svg class="icon"><use href="#i-battery"/></svg></span><span class="stat-label">Stored / exported</span></div>
-            <p class="stat-value">364<span>kWh</span></p><p class="stat-sub">Battery 96 kWh · grid 268 kWh</p>
+            <p class="stat-value">59.2<span>kWh</span></p><p class="stat-sub">Battery 16 kWh · grid 43 kWh</p>
           </article>
           <article class="stat violet">
             <div class="stat-top"><span class="stat-ico"><svg class="icon"><use href="#i-card"/></svg></span><span class="stat-label">Estimated savings</span></div>
-            <p class="stat-value">₹ 4,318</p><p class="stat-sub">Illustrative only</p>
+            <p class="stat-value">₹ 707</p><p class="stat-sub">Illustrative only</p>
           </article>
         </div>
 
@@ -872,7 +920,7 @@
               <table id="reportTable">
                 <thead><tr><th>Month</th><th>Generated</th><th>Consumed</th><th>Exported</th><th>Savings</th><th>Status</th></tr></thead>
                 <tbody>
-                  <tr><td><strong>Nov 2026</strong></td><td class="num">1,046 kWh</td><td class="num">682 kWh</td><td class="num">268 kWh</td><td class="num">₹ 4,318</td><td><span class="pill">On track</span></td></tr>
+                  <tr><td><strong>Nov 2026 *</strong></td><td class="num">168 kWh</td><td class="num">109 kWh</td><td class="num">43 kWh</td><td class="num">₹ 707</td><td><span class="pill">Month to date</span></td></tr>
                   <tr><td><strong>Oct 2026</strong></td><td class="num">1,192 kWh</td><td class="num">742 kWh</td><td class="num">356 kWh</td><td class="num">₹ 5,006</td><td><span class="pill">Closed</span></td></tr>
                   <tr><td><strong>Sep 2026</strong></td><td class="num">1,268 kWh</td><td class="num">806 kWh</td><td class="num">372 kWh</td><td class="num">₹ 5,326</td><td><span class="pill">Closed</span></td></tr>
                   <tr><td><strong>Aug 2026</strong></td><td class="num">1,154 kWh</td><td class="num">834 kWh</td><td class="num">246 kWh</td><td class="num">₹ 4,847</td><td><span class="pill">Closed</span></td></tr>
@@ -973,10 +1021,10 @@
           <article class="card">
             <div class="card-head"><svg class="icon"><use href="#i-panel"/></svg><h3>System Configuration</h3></div>
             <dl class="detail-grid" style="grid-template-columns:minmax(0,1fr)">
-              <div class="detail"><dt>Installed capacity</dt><dd>10 kWp</dd></div>
+              <div class="detail"><dt>Installed capacity</dt><dd>9.9 kWp</dd></div>
               <div class="detail"><dt>Battery</dt><dd>Connected · 5 kWh</dd></div>
-              <div class="detail"><dt>Metering</dt><dd>Net metering</dd></div>
-              <div class="detail"><dt>Gateway</dt><dd>Online · last sync 10:24 AM</dd></div>
+              <div class="detail"><dt>Metering</dt><dd>Net metering (subject to DISCOM approval)</dd></div>
+              <div class="detail"><dt>Gateway</dt><dd>Online · last sync 12:30 PM</dd></div>
             </dl>
           </article>
           <article class="card">
@@ -1001,9 +1049,504 @@
         </div>
       </section>
 
+
+      <!-- ========================= SAVINGS & IMPACT ========================= -->
+      <section class="page" id="page-calculator">
+        <div class="page-head">
+          <div>
+            <h2>Solar savings &amp; environmental impact</h2>
+            <p>Adjust the four inputs — the estimate updates instantly. All figures are illustrative samples.</p>
+          </div>
+          <span class="spacer"></span>
+          <span class="pill amber">Illustrative estimates</span>
+        </div>
+
+        <div class="section-grid" style="margin-bottom:16px">
+          <article class="card">
+            <div class="card-head">
+              <svg class="icon"><use href="#i-calculator"/></svg>
+              <h3>Solar Savings Calculator</h3>
+              <span class="spacer"></span>
+              <span class="pill gray">4 inputs</span>
+            </div>
+
+            <div class="calc-grid" style="grid-template-columns:minmax(0,1fr)">
+              <div class="calc-fields">
+                <div class="calc-field">
+                  <span class="lbl">Solar capacity <b id="capLabel">10 kW</b></span>
+                  <div class="calc-input-row">
+                    <input type="number" id="calcCapacity" data-calc="capacity" min="1" max="100" step="0.1" value="10" aria-label="Solar capacity in kilowatts" />
+                    <span class="unit">kW</span>
+                  </div>
+                  <input type="range" class="calc-range" data-calc="capacity" min="1" max="50" step="0.5" value="10" aria-label="Solar capacity slider" />
+                </div>
+
+                <div class="calc-field">
+                  <span class="lbl">Number of panels <b id="panelLabel">18 × 550 Wp</b></span>
+                  <div class="calc-input-row">
+                    <input type="number" id="calcPanels" data-calc="panels" min="1" max="200" step="1" value="18" aria-label="Number of solar panels" />
+                    <span class="unit">panels</span>
+                  </div>
+                  <input type="range" class="calc-range" data-calc="panels" min="1" max="60" step="1" value="18" aria-label="Number of panels slider" />
+                </div>
+
+                <div class="calc-field">
+                  <span class="lbl">Daily electricity consumption <b id="useLabel">42 kWh</b></span>
+                  <div class="calc-input-row">
+                    <input type="number" id="calcUse" data-calc="dailyUse" min="1" max="500" step="1" value="42" aria-label="Daily electricity consumption in kWh" />
+                    <span class="unit">kWh</span>
+                  </div>
+                  <input type="range" class="calc-range" data-calc="dailyUse" min="5" max="200" step="1" value="42" aria-label="Daily consumption slider" />
+                </div>
+
+                <div class="calc-field">
+                  <span class="lbl">Electricity price <b id="priceLabel">₹ 4.20 / unit</b></span>
+                  <div class="calc-input-row">
+                    <input type="number" id="calcPrice" data-calc="price" min="0.5" max="20" step="0.05" value="4.20" aria-label="Electricity price per unit in rupees" />
+                    <span class="unit">₹ / kWh</span>
+                  </div>
+                  <input type="range" class="calc-range" data-calc="price" min="1" max="12" step="0.1" value="4.2" aria-label="Electricity price slider" />
+                </div>
+              </div>
+
+              <div class="calc-results" style="margin-top:6px">
+                <div class="result-tile"><span>Estimated daily generation</span><strong><span id="calcOutDaily">42.0</span> <small>kWh</small></strong></div>
+                <div class="result-tile"><span>Estimated monthly generation</span><strong><span id="calcOutMonthly">1,260</span> <small>kWh</small></strong></div>
+                <div class="result-tile"><span>Potential monthly electricity value</span><strong>₹ <span id="calcOutValue">5,292</span></strong></div>
+                <div class="result-tile"><span>Bill coverage</span><strong><span id="calcOutCoverage">100</span><small>%</small></strong></div>
+                <div class="result-tile highlight"><span>Estimated monthly savings</span><strong>₹ <span id="calcOutMonthlySaving">5,292</span></strong></div>
+                <div class="result-tile highlight"><span>Estimated annual savings</span><strong>₹ <span id="calcOutAnnualSaving">63,504</span></strong></div>
+              </div>
+            </div>
+
+            <div class="note" style="margin-top:16px">
+              <svg class="icon"><use href="#i-info"/></svg>
+              <span>Assumptions: 4.2 equivalent full-output sun hours per day, 30 days per month, and all generated electricity used on the farm. Savings are capped at your stated consumption. Actual output varies with weather, season, shading, soiling and equipment.</span>
+            </div>
+          </article>
+
+          <div class="stack">
+            <article class="card">
+              <div class="card-head">
+                <svg class="icon"><use href="#i-globe"/></svg>
+                <h3>Environmental Impact</h3>
+                <span class="spacer"></span>
+                <span class="pill">Per year</span>
+              </div>
+              <div class="impact-grid" style="grid-template-columns:repeat(2,minmax(0,1fr))">
+                <div class="impact-tile">
+                  <span class="impact-ico"><svg class="icon"><use href="#i-globe"/></svg></span>
+                  <span>CO₂ emissions avoided</span>
+                  <strong id="impactCo2">12.4 <small>t</small></strong>
+                </div>
+                <div class="impact-tile">
+                  <span class="impact-ico"><svg class="icon"><use href="#i-tree"/></svg></span>
+                  <span>Trees equivalent</span>
+                  <strong id="impactTrees">590</strong>
+                  <small>mature trees per year</small>
+                </div>
+                <div class="impact-tile">
+                  <span class="impact-ico"><svg class="icon"><use href="#i-zap"/></svg></span>
+                  <span>Coal avoided</span>
+                  <strong id="impactCoal">7.6 <small>t</small></strong>
+                </div>
+                <div class="impact-tile">
+                  <span class="impact-ico"><svg class="icon"><use href="#i-sprout"/></svg></span>
+                  <span>Clean energy share</span>
+                  <strong id="impactShare">100<small>%</small></strong>
+                  <small>of the stated usage</small>
+                </div>
+              </div>
+              <div class="note" style="margin-top:14px">
+                <svg class="icon"><use href="#i-info"/></svg>
+                <span>Using 0.82 kg CO₂ avoided per kWh, 21 kg CO₂ absorbed per mature tree per year and ~0.5 kg coal per kWh — indicative factors for teaching purposes, not a verified carbon study.</span>
+              </div>
+            </article>
+
+            <article class="card">
+              <div class="card-head"><svg class="icon"><use href="#i-info"/></svg><h3>How this estimate works</h3></div>
+              <ul class="pkg-features" style="margin:0">
+                <li><svg class="icon"><use href="#i-check"/></svg><span>Generation = capacity × 4.2 full-output hours per day.</span></li>
+                <li><svg class="icon"><use href="#i-check"/></svg><span>Monthly value = monthly generation × your electricity price.</span></li>
+                <li><svg class="icon"><use href="#i-check"/></svg><span>Savings = only the generation you can actually use, priced at that rate.</span></li>
+                <li><svg class="icon"><use href="#i-check"/></svg><span>Panels are assumed at 550 Wp each, so 18 panels ≈ 9.9 kWp.</span></li>
+              </ul>
+            </article>
+          </div>
+        </div>
+
+        <article class="card">
+          <div class="card-head">
+            <svg class="icon"><use href="#i-chart"/></svg>
+            <h3>Sample scenario (from the review notes)</h3>
+            <span class="spacer"></span>
+            <span class="pill gray">Reference values</span>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Input / output</th><th>Sample value</th><th>Note</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Solar capacity</strong></td><td class="num">10 kW</td><td>18 × 550 Wp modules</td></tr>
+                <tr><td><strong>Electricity price</strong></td><td class="num">₹ 4.20 / unit</td><td>Illustrative tariff</td></tr>
+                <tr><td>Estimated daily generation</td><td class="num">42.0 kWh</td><td>4.2 full-output hours</td></tr>
+                <tr><td>Estimated monthly generation</td><td class="num">1,260 kWh</td><td>30 days per month</td></tr>
+                <tr><td>Potential monthly electricity value</td><td class="num">₹ 5,292</td><td>If every unit is used</td></tr>
+                <tr><td><strong>Estimated annual savings</strong></td><td class="num">₹ 63,504</td><td>12 × monthly savings</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="note" style="margin-top:14px">
+            <svg class="icon"><use href="#i-info"/></svg>
+            <span>These are classroom estimates, not a quotation, guarantee or approved tariff. Obtain a site assessment and written proposal before relying on any number.</span>
+          </div>
+        </article>
+      </section>
+
+      <!-- ====================== PRICING & REVENUE ========================== -->
+      <section class="page" id="page-business">
+        <div class="page-head">
+          <div>
+            <h2>Packages, pay-per-use billing &amp; operating model</h2>
+            <p>How Eco Farm Tech proposes to charge for clean farm electricity and monitoring.</p>
+          </div>
+          <span class="spacer"></span>
+          <span class="pill amber">Proposed demo prices</span>
+        </div>
+
+        <div class="packages" style="margin-bottom:16px">
+          <article class="package">
+            <span class="pkg-name">Basic</span>
+            <span class="pkg-tagline">For small farms getting started</span>
+            <div class="pkg-price"><strong>₹ 99</strong><span>/ month</span></div>
+            <ul class="pkg-features">
+              <li><svg class="icon"><use href="#i-check"/></svg> Live energy monitoring</li>
+              <li><svg class="icon"><use href="#i-check"/></svg> Daily generation summary</li>
+              <li><svg class="icon"><use href="#i-check"/></svg> Mobile friendly dashboard</li>
+              <li><svg class="icon"><use href="#i-check"/></svg> Email support</li>
+            </ul>
+            <button class="btn btn-ghost" data-toast="Basic plan selected (demo only).">Choose Basic</button>
+          </article>
+
+          <article class="package featured">
+            <span class="pkg-flag">Most chosen</span>
+            <span class="pkg-name">Standard</span>
+            <span class="pkg-tagline">For active irrigated farms</span>
+            <div class="pkg-price"><strong>₹ 199</strong><span>/ month</span></div>
+            <ul class="pkg-features">
+              <li><svg class="icon"><use href="#i-check"/></svg> Everything in Basic</li>
+              <li><svg class="icon"><use href="#i-check"/></svg> Fault &amp; low-battery alerts</li>
+              <li><svg class="icon"><use href="#i-check"/></svg> Irrigation scheduling</li>
+              <li><svg class="icon"><use href="#i-check"/></svg> Monthly PDF statement</li>
+              <li><svg class="icon"><use href="#i-check"/></svg> Priority email support</li>
+            </ul>
+            <button class="btn btn-primary" data-toast="Standard plan selected (demo only).">Choose Standard</button>
+          </article>
+
+          <article class="package">
+            <span class="pkg-name">Premium</span>
+            <span class="pkg-tagline">For multi-zone commercial farms</span>
+            <div class="pkg-price"><strong>₹ 399</strong><span>/ month</span></div>
+            <ul class="pkg-features">
+              <li><svg class="icon"><use href="#i-check"/></svg> Everything in Standard</li>
+              <li><svg class="icon"><use href="#i-check"/></svg> Advanced performance reports</li>
+              <li><svg class="icon"><use href="#i-check"/></svg> Preventive maintenance visits</li>
+              <li><svg class="icon"><use href="#i-check"/></svg> Dedicated field engineer</li>
+              <li><svg class="icon"><use href="#i-check"/></svg> Phone support</li>
+            </ul>
+            <button class="btn btn-ghost" data-toast="Premium plan selected (demo only).">Choose Premium</button>
+          </article>
+        </div>
+
+        <div class="two-col" style="margin-bottom:16px">
+          <article class="card">
+            <div class="card-head">
+              <svg class="icon"><use href="#i-rupee"/></svg>
+              <h3>How pay-per-use billing works</h3>
+              <span class="spacer"></span>
+              <span class="pill">₹ 4.20 / kWh</span>
+            </div>
+            <ol class="pkg-features" style="margin:0;counter-reset:step">
+              <li><svg class="icon"><use href="#i-check"/></svg><span><strong>1.</strong> Solar electricity supplied to the farm is measured in kWh by the energy meter.</span></li>
+              <li><svg class="icon"><use href="#i-check"/></svg><span><strong>2.</strong> Metered units are billed at the agreed rate — ₹4.20 per kWh in this demo.</span></li>
+              <li><svg class="icon"><use href="#i-check"/></svg><span><strong>3.</strong> Usage is settled monthly; the dashboard statement shows generation, consumption and any export.</span></li>
+              <li><svg class="icon"><use href="#i-check"/></svg><span><strong>4.</strong> Any grid export credit depends on DISCOM approvals, net-metering rules and the signed agreement.</span></li>
+            </ol>
+            <div class="note" style="margin-top:14px">
+              <svg class="icon"><use href="#i-lock"/></svg>
+              <span>Supplying electricity to third parties may require specific approvals. The final model must be checked against local electricity-supply rules before it is offered commercially.</span>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-head">
+              <svg class="icon"><use href="#i-chart"/></svg>
+              <h3>Revenue vs expenses</h3>
+              <span class="spacer"></span>
+              <span class="pill gray">Sample, single-farm model</span>
+            </div>
+            <div class="dual-bars" id="revChart"></div>
+            <div class="chart-legend" style="margin-top:14px">
+              <span class="legend-item"><span class="legend-swatch" style="background:#1e9e57"></span> Revenue</span>
+              <span class="legend-item"><span class="legend-swatch" style="background:#f0b429"></span> Expenses</span>
+              <span class="legend-item" style="margin-left:auto">₹ per month</span>
+            </div>
+          </article>
+        </div>
+
+        <div class="two-col" style="margin-bottom:16px">
+          <article class="card">
+            <div class="card-head">
+              <svg class="icon"><use href="#i-calculator"/></svg>
+              <h3>Monthly operating model</h3>
+              <span class="spacer"></span>
+              <div style="display:flex;gap:6px">
+                <button class="btn btn-ghost btn-sm" data-fin="singleFarm" aria-pressed="true">1 farm</button>
+                <button class="btn btn-ghost btn-sm" data-fin="scaled" aria-pressed="false">3 farms</button>
+              </div>
+            </div>
+            <div class="fin-rows" id="finRows"></div>
+            <div class="note" style="margin-top:14px">
+              <svg class="icon"><use href="#i-info"/></svg>
+              <span id="finNote">Sample operating model for one monitored farm: electricity revenue plus subscription income, less maintenance, staff and other costs.</span>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-head">
+              <svg class="icon"><use href="#i-gauge"/></svg>
+              <h3>Break-even projection</h3>
+              <span class="spacer"></span>
+              <span class="pill amber">Sample projection</span>
+            </div>
+            <div class="calc-results">
+              <div class="result-tile"><span>Initial investment</span><strong>₹ <span id="finInvestment">4,80,000</span></strong><small>10 kWp system, sample</small></div>
+              <div class="result-tile"><span>Annual operating surplus</span><strong>₹ <span id="finSurplus">24,000</span></strong></div>
+              <div class="result-tile highlight"><span>Estimated break-even</span><strong><span id="finBreakEven">20.0</span> <small>years</small></strong></div>
+              <div class="result-tile"><span>Model</span><strong style="font-size:14px" id="finModel">Single farm</strong><small>scenario</small></div>
+            </div>
+            <div class="note" style="margin-top:14px">
+              <svg class="icon"><use href="#i-info"/></svg>
+              <span>Break-even = initial investment ÷ annual operating surplus. Real projects must also account for downtime, maintenance, insurance, financing, tariffs and demand. This is a teaching projection, not a financial guarantee.</span>
+            </div>
+          </article>
+        </div>
+
+        <article class="card">
+          <div class="card-head"><svg class="icon"><use href="#i-layers"/></svg><h3>Where the revenue comes from</h3></div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Stream</th><th>Basis</th><th>Demo value</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Pay-per-use electricity</strong></td><td>Metered kWh × agreed rate</td><td class="num">₹ 4,500 / month</td><td><span class="pill">Primary</span></td></tr>
+                <tr><td>Monitoring subscription</td><td>Basic / Standard / Premium</td><td class="num">₹ 1,000 / month</td><td><span class="pill blue">Recurring</span></td></tr>
+                <tr><td>Maintenance services</td><td>Inspection, cleaning, repairs</td><td class="num">On request</td><td><span class="pill gray">Optional</span></td></tr>
+                <tr><td>System sales</td><td>One-time equipment &amp; installation</td><td class="num">Quoted per site</td><td><span class="pill gray">Optional</span></td></tr>
+                <tr><td>Grid export credit</td><td>Subject to DISCOM approval</td><td class="num">Not assumed</td><td><span class="pill amber">Regulated</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+      </section>
+
+      <!-- ========================= FARMER REGISTRATION ===================== -->
+      <section class="page" id="page-register">
+        <div class="page-head">
+          <div>
+            <h2>Request a solar installation estimate</h2>
+            <p>Tell us about your farm and we will outline a suitable system size and expected generation.</p>
+          </div>
+          <span class="spacer"></span>
+          <span class="pill amber">Demo form — no data is sent</span>
+        </div>
+
+        <div class="section-grid">
+          <article class="card form-card">
+            <div class="card-head">
+              <svg class="icon"><use href="#i-users"/></svg>
+              <h3>Farmer enquiry</h3>
+              <span class="spacer"></span>
+              <span class="pill gray">Takes ~1 minute</span>
+            </div>
+            <form id="enquiryForm" novalidate>
+              <div class="form-grid-2">
+                <label class="field"><span>Full name *</span>
+                  <input type="text" name="name" placeholder="e.g. Ravi Kumar" required autocomplete="name" /></label>
+                <label class="field"><span>Mobile number *</span>
+                  <input type="tel" name="phone" placeholder="10-digit mobile number" required autocomplete="tel" /></label>
+                <label class="field"><span>Email (optional)</span>
+                  <input type="email" name="email" placeholder="you@example.com" autocomplete="email" /></label>
+                <label class="field"><span>Farm location *</span>
+                  <input type="text" name="location" placeholder="Village / district" required /></label>
+                <label class="field"><span>Land area (acres) *</span>
+                  <input type="number" name="area" min="0.1" step="0.1" placeholder="e.g. 5" required /></label>
+                <label class="field"><span>Required solar capacity (kW) *</span>
+                  <input type="number" name="capacity" min="0.5" step="0.5" placeholder="e.g. 10" required /></label>
+                <label class="field" style="grid-column:1/-1"><span>Average monthly electricity bill (₹, optional)</span>
+                  <input type="number" name="bill" min="0" step="50" placeholder="e.g. 4500" /></label>
+                <label class="field" style="grid-column:1/-1"><span>Anything else we should know?</span>
+                  <textarea name="notes" rows="3" placeholder="Crops grown, existing pump rating, shading, battery interest…"></textarea></label>
+              </div>
+
+              <label class="check-row" style="display:flex;gap:9px;align-items:flex-start;margin:4px 0 16px;font-size:11.8px;color:var(--muted)">
+                <input type="checkbox" required style="margin-top:2px;accent-color:var(--brand)" />
+                <span>I understand this is a student prototype, that the form does not transmit data, and that any estimate would be illustrative.</span>
+              </label>
+
+              <button class="btn btn-primary" type="submit">
+                <svg class="icon"><use href="#i-send"/></svg> Request a Solar Installation Estimate
+              </button>
+            </form>
+
+            <div class="success-panel" id="enquirySuccess" role="status" aria-live="polite">
+              <span class="ok-ico"><svg class="icon"><use href="#i-check"/></svg></span>
+              <div>
+                <strong>Request prepared successfully</strong>
+                <p id="enquiryRef">Reference EFT-DEMO-0000 — nothing was transmitted; this demo stops at validation.</p>
+              </div>
+            </div>
+          </article>
+
+          <div class="stack">
+            <article class="card">
+              <div class="card-head"><svg class="icon"><use href="#i-layers"/></svg><h3>How it works</h3></div>
+              <div class="steps">
+                <div class="step"><span class="step-num">1</span><div><strong>Share your farm details</strong><p>Location, land area, crops and the capacity you have in mind.</p></div></div>
+                <div class="step"><span class="step-num">2</span><div><strong>Site assessment</strong><p>A qualified installer reviews space, shading and electrical protection needs.</p></div></div>
+                <div class="step"><span class="step-num">3</span><div><strong>Written estimate</strong><p>A proposal with equipment, cost and expected generation — no obligation.</p></div></div>
+                <div class="step"><span class="step-num">4</span><div><strong>Installation &amp; monitoring</strong><p>Certified installation, commissioning and dashboard access for your farm.</p></div></div>
+              </div>
+            </article>
+
+            <article class="card">
+              <div class="card-head"><svg class="icon"><use href="#i-file"/></svg><h3>What you would receive</h3></div>
+              <ul class="pkg-features" style="margin:0">
+                <li><svg class="icon"><use href="#i-check"/></svg><span>Recommended system size and panel layout.</span></li>
+                <li><svg class="icon"><use href="#i-check"/></svg><span>Expected daily, monthly and annual generation.</span></li>
+                <li><svg class="icon"><use href="#i-check"/></svg><span>Indicative cost, subsidy eligibility and payback period.</span></li>
+                <li><svg class="icon"><use href="#i-check"/></svg><span>Monitoring plan and maintenance schedule.</span></li>
+              </ul>
+              <div class="note" style="margin-top:14px">
+                <svg class="icon"><use href="#i-shield"/></svg>
+                <span>Installations must be designed and commissioned by qualified solar and electrical professionals, complying with local requirements.</span>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================== ABOUT ============================== -->
+      <section class="page" id="page-about">
+        <div class="about-hero">
+          <span class="eyebrow"><svg class="icon" style="width:13px;height:13px"><use href="#i-leaf"/></svg> Student venture concept · Version 1.0</span>
+          <h2>Solar-powered electricity for sustainable farming.</h2>
+          <p>Eco Farm Tech proposes a solar system with a monitoring dashboard that helps farm operators see how much clean electricity they generate, where it is used and what it costs — so irrigation and electrical loads can be planned around the sun.</p>
+          <div class="about-tags">
+            <span class="pill">Demo prototype</span>
+            <span class="pill">Not connected to live hardware</span>
+            <span class="pill">Andhra Pradesh, India</span>
+            <span class="pill">Clean energy · Smart farming</span>
+          </div>
+        </div>
+
+        <div class="two-col" style="margin-bottom:16px">
+          <article class="card">
+            <div class="card-head"><svg class="icon"><use href="#i-info"/></svg><h3>The problem</h3></div>
+            <p style="font-size:12.8px;color:var(--ink-2);line-height:1.65">
+              Farm operations depend on a reliable electricity supply for water pumping and irrigation. Power interruptions and energy expenses can affect farm productivity, and many farms have no clear view of how much energy each activity actually consumes.
+            </p>
+          </article>
+          <article class="card">
+            <div class="card-head"><svg class="icon"><use href="#i-sun"/></svg><h3>Our proposed solution</h3></div>
+            <p style="font-size:12.8px;color:var(--ink-2);line-height:1.65">
+              Photovoltaic panels generate electricity from sunlight, an inverter converts it for farm loads, and an optional battery stores surplus. A monitoring dashboard shows generation, consumption and system status so the operator can act on it.
+            </p>
+          </article>
+        </div>
+
+        <article class="card" style="margin-bottom:16px">
+          <div class="card-head">
+            <svg class="icon"><use href="#i-layers"/></svg>
+            <h3>How the system works</h3>
+            <span class="spacer"></span>
+            <span class="pill gray">Solar → inverter → meter → farm loads</span>
+          </div>
+          <div class="flow-steps">
+            <div class="flow-step"><div class="fs-top"><span class="fs-ico"><svg class="icon icon-sm"><use href="#i-sun"/></svg></span><strong>1. Sunlight</strong></div><p>Available solar resource, which changes with weather, season and time of day.</p></div>
+            <div class="flow-step"><div class="fs-top"><span class="fs-ico"><svg class="icon icon-sm"><use href="#i-panel"/></svg></span><strong>2. Solar panels</strong></div><p>PV modules convert sunlight into direct-current (DC) electricity.</p></div>
+            <div class="flow-step"><div class="fs-top"><span class="fs-ico"><svg class="icon icon-sm"><use href="#i-shield"/></svg></span><strong>3. Protection</strong></div><p>DC protection, combiner boxes, isolators, surge protection and earthing.</p></div>
+            <div class="flow-step"><div class="fs-top"><span class="fs-ico"><svg class="icon icon-sm"><use href="#i-zap"/></svg></span><strong>4. Inverter</strong></div><p>Converts DC into alternating current for pumps and farm equipment.</p></div>
+            <div class="flow-step"><div class="fs-top"><span class="fs-ico"><svg class="icon icon-sm"><use href="#i-gauge"/></svg></span><strong>5. Meter &amp; distribution</strong></div><p>Measures energy supplied or consumed and feeds the farm distribution board.</p></div>
+            <div class="flow-step"><div class="fs-top"><span class="fs-ico"><svg class="icon icon-sm"><use href="#i-droplet"/></svg></span><strong>6. Farm loads</strong></div><p>Irrigation pump, lighting and other equipment — with an optional battery for later use.</p></div>
+          </div>
+          <div class="note" style="margin-top:14px">
+            <svg class="icon"><use href="#i-info"/></svg>
+            <span>The dashboard is the last link in the chain: it displays monitoring data so the operator can understand system performance. It does not measure or control electricity by itself.</span>
+          </div>
+        </article>
+
+        <div class="equal-3" style="margin-bottom:16px">
+          <article class="card">
+            <div class="card-head"><svg class="icon"><use href="#i-users"/></svg><h3>Who it is for</h3></div>
+            <ul class="pkg-features" style="margin:0">
+              <li><svg class="icon"><use href="#i-check"/></svg><span>Farmers using electric irrigation pumps</span></li>
+              <li><svg class="icon"><use href="#i-check"/></svg><span>Farmer Producer Organisations (FPOs)</span></li>
+              <li><svg class="icon"><use href="#i-check"/></svg><span>Agricultural cooperatives</span></li>
+              <li><svg class="icon"><use href="#i-check"/></svg><span>Farmhouses and rural businesses</span></li>
+              <li><svg class="icon"><use href="#i-check"/></svg><span>Small agro-processing units</span></li>
+            </ul>
+          </article>
+          <article class="card">
+            <div class="card-head"><svg class="icon"><use href="#i-sprout"/></svg><h3>Benefits</h3></div>
+            <ul class="pkg-features" style="margin:0">
+              <li><svg class="icon"><use href="#i-check"/></svg><span>Uses renewable solar energy</span></li>
+              <li><svg class="icon"><use href="#i-check"/></svg><span>Can reduce dependence on grid electricity</span></li>
+              <li><svg class="icon"><use href="#i-check"/></svg><span>Visibility into generation and consumption</span></li>
+              <li><svg class="icon"><use href="#i-check"/></svg><span>Expandable with demand and available space</span></li>
+            </ul>
+          </article>
+          <article class="card">
+            <div class="card-head"><svg class="icon"><use href="#i-shield"/></svg><h3>Risks &amp; considerations</h3></div>
+            <ul class="pkg-features" style="margin:0">
+              <li><svg class="icon"><use href="#i-info"/></svg><span>Output varies with weather, season and shading</span></li>
+              <li><svg class="icon"><use href="#i-info"/></svg><span>Batteries add cost and need safe maintenance</span></li>
+              <li><svg class="icon"><use href="#i-info"/></svg><span>Equipment may need repair or replacement</span></li>
+              <li><svg class="icon"><use href="#i-info"/></svg><span>Grid export needs approvals and agreements</span></li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="two-col">
+          <article class="card">
+            <div class="card-head"><svg class="icon"><use href="#i-mail"/></svg><h3>Contact</h3><span class="spacer"></span><span class="pill amber">Demo details</span></div>
+            <div class="contact-list">
+              <div class="contact-row"><span class="icon-wrap"><svg class="icon icon-sm"><use href="#i-mail"/></svg></span><div><span>Email</span><strong>hello@ecofarmtech.example</strong></div></div>
+              <div class="contact-row"><span class="icon-wrap"><svg class="icon icon-sm"><use href="#i-phone"/></svg></span><div><span>Phone</span><strong>+91 00000 00000 (placeholder)</strong></div></div>
+              <div class="contact-row"><span class="icon-wrap"><svg class="icon icon-sm"><use href="#i-pin"/></svg></span><div><span>Base</span><strong>Andhra Pradesh, India</strong></div></div>
+              <div class="contact-row"><span class="icon-wrap"><svg class="icon icon-sm"><use href="#i-clock"/></svg></span><div><span>Office hours</span><strong>Mon – Sat · 9:00 AM to 6:00 PM</strong></div></div>
+            </div>
+            <a class="btn btn-primary" style="margin-top:16px" href="#register">Request an estimate <svg class="icon"><use href="#i-arrow-right"/></svg></a>
+          </article>
+
+          <article class="card">
+            <div class="card-head"><svg class="icon"><use href="#i-globe"/></svg><h3>Project status &amp; future scope</h3></div>
+            <ul class="pkg-features" style="margin:0 0 14px">
+              <li><svg class="icon"><use href="#i-check"/></svg><span>Monitoring dashboard prototype complete (Version 1.0).</span></li>
+              <li><svg class="icon"><use href="#i-info"/></svg><span>Next: live inverter and energy-meter integration.</span></li>
+              <li><svg class="icon"><use href="#i-info"/></svg><span>Mobile alerts for faults and abnormal energy usage.</span></li>
+              <li><svg class="icon"><use href="#i-info"/></svg><span>Irrigation scheduling based on available solar power.</span></li>
+              <li><svg class="icon"><use href="#i-info"/></svg><span>Monthly energy reports and community solar expansion.</span></li>
+            </ul>
+            <div class="note">
+              <svg class="icon"><use href="#i-shield"/></svg>
+              <span>This site describes a proposed student venture and an illustrative digital dashboard. It is not a construction design, electrical installation guide, live monitoring service, financial guarantee or regulatory approval.</span>
+            </div>
+          </article>
+        </div>
+      </section>
+
       <footer class="foot">
         <span><strong>Eco Farm Tech</strong> · Solar-powered electricity for sustainable farming</span>
-        <span>Prototype dashboard · illustrative values · © 2026 Eco Farm Tech</span>
+        <span>Prototype dashboard · illustrative values · MIT licensed · © 2026 Eco Farm Tech</span>
       </footer>
     </main>
   </div>

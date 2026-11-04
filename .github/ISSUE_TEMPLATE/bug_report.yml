@@ -1,0 +1,68 @@
+name: Bug report
+description: Report a layout, content or behaviour problem on the dashboard
+title: "[Bug]: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve Eco Farm Tech. Please check that the issue is
+        about this prototype and not about the illustrative demo data itself.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Describe the problem and what you expected instead.
+      placeholder: On the Pricing & Revenue page the third package card...
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Open the site at #business
+        2. Switch to dark mode
+        3. Resize to 390px wide
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Affected area
+      options:
+        - Dashboard
+        - Owner Profile
+        - Solar Power
+        - Farm Monitoring
+        - Irrigation Control
+        - Reports
+        - Settings
+        - Savings & Impact
+        - Pricing & Revenue
+        - Farmer Registration
+        - About
+        - Dark mode / theming
+        - Docker / deployment
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and version
+      placeholder: Chrome 131, Firefox 133, Safari 18…
+  - type: input
+    id: viewport
+    attributes:
+      label: Viewport / device
+      placeholder: 1440×900 desktop, iPhone 14, …
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before submitting
+      options:
+        - label: I searched existing issues and this is not a duplicate.
+          required: true
+        - label: I understand all dashboard figures are illustrative demo data.
+          required: true

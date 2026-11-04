@@ -71,7 +71,7 @@ const EFT_DATA = {
     { label: "Aug", value: 1154 },
     { label: "Sep", value: 1268 },
     { label: "Oct", value: 1192 },
-    { label: "Nov", value: 1046, today: true }
+    { label: "Nov*", value: 168, today: true }
   ],
 
   energyBreakdown: [
@@ -94,7 +94,97 @@ const EFT_PAGES = {
   monitoring: { title: "Farm Monitoring", subtitle: "Soil, crop and climate readings" },
   irrigation: { title: "Irrigation Control", subtitle: "Pump operation, zones and scheduling" },
   reports: { title: "Reports", subtitle: "Energy, savings and downloadable summaries" },
+  calculator: { title: "Savings & Impact", subtitle: "Estimate generation, savings and avoided emissions" },
+  business: { title: "Pricing & Revenue", subtitle: "Packages, pay-per-use billing and operating model" },
+  register: { title: "Farmer Registration", subtitle: "Request a solar installation estimate" },
+  about: { title: "About Eco Farm Tech", subtitle: "The idea, the system and who it is for" },
   settings: { title: "Settings", subtitle: "Account, alerts and system preferences" }
 };
 
 window.EFT_PAGES = EFT_PAGES;
+
+/* ==========================================================================
+   Business, calculator and impact demo data
+   Every figure below is an illustrative sample for the student prototype.
+   ========================================================================== */
+
+window.EFT_BUSINESS = {
+  /* Solar savings calculator assumptions (section "Planned Improvements") */
+  calculator: {
+    defaults: { capacity: 10, panels: 18, dailyUse: 42, price: 4.2 },
+    panelWp: 550,
+    fullOutputHours: 4.2,   // equivalent full-output sun hours per day
+    daysPerMonth: 30,
+    co2PerKwh: 0.82,        // kg CO2 avoided per kWh of solar electricity
+    treeAbsorbKg: 21,       // kg CO2 absorbed by one mature tree per year
+    coalPerKwh: 0.5         // kg of coal avoided per kWh (indicative)
+  },
+
+  /* Subscription packages (proposed demonstration prices) */
+  packages: [
+    {
+      name: "Basic",
+      price: 99,
+      tagline: "For small farms getting started",
+      features: ["Live energy monitoring", "Daily generation summary", "Mobile friendly dashboard", "Email support"],
+      featured: false
+    },
+    {
+      name: "Standard",
+      price: 199,
+      tagline: "Most chosen by active farms",
+      features: ["Everything in Basic", "Fault & low-battery alerts", "Irrigation scheduling", "Monthly PDF statement", "Priority email support"],
+      featured: true
+    },
+    {
+      name: "Premium",
+      price: 399,
+      tagline: "For multi-zone commercial farms",
+      features: ["Everything in Standard", "Advanced performance reports", "Preventive maintenance visits", "Dedicated field engineer", "Phone support"],
+      featured: false
+    }
+  ],
+
+  /* Pay-per-use explanation used on the pricing page */
+  payPerUse: {
+    rate: 4.2,
+    steps: [
+      "Solar electricity supplied to the farm is measured in kWh by the energy meter.",
+      "The metered units are billed at the agreed rate (₹4.20 per kWh in this demo).",
+      "Usage is settled monthly; the dashboard statement shows generation, consumption and any export.",
+      "Any grid export credit depends on DISCOM approvals, net-metering rules and the signed agreement."
+    ]
+  },
+
+  /* Illustrative monthly operating model */
+  finance: {
+    singleFarm: {
+      label: "Single-farm model (sample)",
+      revenue: 4500,
+      subscription: 1000,
+      maintenance: 1000,
+      employee: 2000,
+      other: 500
+    },
+    scaled: {
+      label: "Three-farm model (sample)",
+      revenue: 13500,
+      subscription: 3000,
+      maintenance: 3000,
+      employee: 4500,
+      other: 1500
+    },
+    initialInvestment: 480000,
+    monthlyRevenueSeries: [4200, 4550, 4700, 4900, 5200, 5500],
+    monthlyExpenseSeries: [3200, 3300, 3350, 3400, 3450, 3500],
+    months: ["Jun", "Jul", "Aug", "Sep", "Oct", "Nov"]
+  },
+
+  /* Farmer registration "how it works" */
+  onboarding: [
+    { title: "Share your farm details", text: "Tell us the location, land area and the solar capacity you need." },
+    { title: "Site assessment", text: "A qualified installer reviews roof or ground space, shading and electrical protection needs." },
+    { title: "Written estimate", text: "You receive a proposal with equipment, cost and expected generation — no obligation." },
+    { title: "Installation & monitoring", text: "Certified installation, commissioning and dashboard access for your farm." }
+  ]
+};
