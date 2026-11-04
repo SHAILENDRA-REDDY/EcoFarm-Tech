@@ -123,7 +123,7 @@
       </div>
     </div>
     <div class="sidebar-note">
-      Demo prototype · monitoring values are illustrative and not live readings from an installed system.
+      Prototype · live clock, sample monitoring values. Not readings from an installed system.
     </div>
   </aside>
 
@@ -142,12 +142,10 @@
       </div>
 
       <div class="topbar-actions">
-        <div class="clock" title="Fixed demo snapshot — not a live reading">
-          <svg class="icon"><use href="#i-calendar"/></svg>
-          <span id="clockDate">04 Nov 2026</span>
-          <span class="sep"></span>
-          <span id="clockTime">12:30 PM</span>
-          <span class="demo-chip">Demo</span>
+        <div class="clock" title="Live clock — dashboard figures are sample data">
+          <span class="live-chip"><span class="pulse" aria-hidden="true"></span> Live</span>
+          <span class="clock-date" id="clockDate">04 Nov 2026</span>
+          <span class="clock-time" id="clockTime">--:--:-- --</span>
         </div>
 
         <button class="icon-btn theme-btn" id="themeBtn" type="button" aria-label="Switch to dark mode" aria-pressed="false" title="Toggle dark mode">

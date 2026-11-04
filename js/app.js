@@ -21,14 +21,100 @@
     toastTimer = setTimeout(() => toastEl.classList.remove("show"), 2800);
   }
 
-  /* ------------------------------------------------------- demo snapshot --- */
-  /* The dashboard is a fixed demo snapshot (04 Nov 2026, 12:30 PM) so the
-     headline figures, peak time and activity log stay consistent. */
-  const SNAPSHOT = { date: "04 Nov 2026", time: "12:30 PM" };
-  const clockDate = $("#clockDate"), clockTime = $("#clockTime"), lastUpdated = $("#lastUpdated");
-  if (clockDate) clockDate.textContent = SNAPSHOT.date;
-  if (clockTime) clockTime.textContent = SNAPSHOT.time;
-  if (lastUpdated) lastUpdated.textContent = SNAPSHOT.date + " · " + SNAPSHOT.time;
+  /* ----------------------------------------------------------- live clock -- */
+  const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const pad2 = (n) => String(n).padStart(2, "0");
+  const clockDate = $("#clockDate");
+  const clockTime = $("#clockTime");
+  const lastUpdated = $("#lastUpdated");
+  const PEAK = { hours: 12, minutes: 15 };
+  const motionQuery = typeof window.matchMedia === "function"
+    ? window.matchMedia("(prefers-reduced-motion: reduce)")
+    : { matches: false };
+  let chartRange = "today";
+
+  function formatNow(d) {
+    const h = d.getHours();
+    return {
+      date: `${pad2(d.getDate())} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`,
+      time: `${h % 12 || 12}:${pad2(d.getMinutes())}:${pad2(d.getSeconds())} ${h < 12 ? "AM" : "PM"}`,
+      short: `${h % 12 || 12}:${pad2(d.getMinutes())} ${h < 12 ? "AM" : "PM"}`
+    };
+  }
+
+  function peakNote(now) {
+    const peak = new Date(now);
+    peak.setHours(PEAK.hours, PEAK.minutes, 0, 0);
+    return now >= peak ? "Peak 8.5 kW at 12:15 PM" : "Expected peak 8.5 kW around 12:15 PM";
+  }
+
+  function updateFootnote() {
+    const el = $("#chartFootnote");
+    if (!el) return;
+    if (chartRange === "today") {
+      el.textContent = peakNote(new Date());
+    } else {
+      const cfg = (window.EFT_DATA || {})[chartRange];
+      el.textContent = cfg && cfg.footnote ? cfg.footnote : "";
+    }
+  }
+
+  function tickClock() {
+    const now = new Date();
+    const stamp = formatNow(now);
+    if (clockDate) clockDate.textContent = stamp.date;
+    if (clockTime) clockTime.textContent = stamp.time;
+    if (lastUpdated) lastUpdated.textContent = `${stamp.date} · ${stamp.short}`;
+    updateFootnote();
+  }
+  tickClock();
+  setInterval(tickClock, 1000);
+
+  /* -------------------------------------------------------- motion helpers -- */
+  function replay(el, cls) {
+    if (!el || motionQuery.matches) return;
+    el.classList.remove(cls);
+    void el.offsetWidth; // restart the animation
+    el.classList.add(cls);
+  }
+
+  const NUMBER_RE = /^([^0-9]*)([0-9][0-9,]*(?:\.[0-9]+)?)([^0-9]*)$/;
+  function tweenText(el, next) {
+    if (!el) return;
+    if (el.textContent === next) return;
+    const targetMatch = String(next).match(NUMBER_RE);
+    const startMatch = String(el.textContent).match(NUMBER_RE);
+    if (!targetMatch || !startMatch) { el.textContent = next; return; }
+
+    const prefix = targetMatch[1];
+    const rawTarget = targetMatch[2];
+    const suffix = targetMatch[3];
+    const target = parseFloat(rawTarget.replace(/,/g, ""));
+    const from = parseFloat(startMatch[2].replace(/,/g, "")) || 0;
+    const decimals = (rawTarget.split(".")[1] || "").length;
+
+    if (motionQuery.matches || !isFinite(target) || Math.abs(target - from) < 1e-6) {
+      el.textContent = next;
+      return;
+    }
+
+    const started = performance.now();
+    const duration = 280;
+    if (el._tween) cancelAnimationFrame(el._tween);
+
+    const step = (now) => {
+      const progress = Math.min(1, (now - started) / duration);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const value = from + (target - from) * eased;
+      el.textContent = prefix + value.toLocaleString("en-IN", {
+        minimumFractionDigits: decimals,
+        maximumFractionDigits: decimals
+      }) + suffix;
+      if (progress < 1) el._tween = requestAnimationFrame(step);
+      else el.textContent = next;
+    };
+    el._tween = requestAnimationFrame(step);
+  }
 
   /* ------------------------------------------------------- shared data ----- */
   const DATA = window.EFT_DATA || { today: { labels: [], values: [] } };
@@ -201,12 +287,15 @@
   const rangeSelect = $("#rangeSelect");
   if (rangeSelect) {
     rangeSelect.addEventListener("change", () => {
-      const cfg = DATA[rangeSelect.value] || DATA.today;
+      chartRange = rangeSelect.value;
+      const cfg = DATA[chartRange] || DATA.today;
       drawArea($("#genChart"), Object.assign({ ariaLabel: "Solar energy generation curve" }, cfg));
-      const foot = $("#chartFootnote");
-      if (foot) foot.textContent = cfg.footnote || "";
+      updateFootnote();
+      replay($("#genChart"), "animate-swap");
     });
+    chartRange = rangeSelect.value;
   }
+  updateFootnote();
 
   /* ---------------------------------------------------------------- routing */
   const routes = Object.keys(PAGES);
@@ -220,6 +309,14 @@
     const route = currentRoute();
     $$(".page").forEach((p) => p.classList.toggle("active", p.id === "page-" + route));
     $$(".nav-item").forEach((a) => a.classList.toggle("active", a.dataset.page === route));
+
+    // Stagger the entrance of each block on the page that just became active
+    const active = document.getElementById("page-" + route);
+    if (active) {
+      const blocks = active.querySelectorAll(".stat, .card, .package, .owner-hero, .about-hero");
+      blocks.forEach((el, i) => el.style.setProperty("--i", String(Math.min(i, 9))));
+    }
+
     const meta = PAGES[route];
     const t = $("#pageTitle"), s = $("#pageSubtitle");
     if (t) t.textContent = meta.title;
@@ -381,13 +478,23 @@
     if (meta) meta.setAttribute("content", dark ? "#06120d" : "#0b3a28");
   }
 
-  function setTheme(theme, persist) {
+  function applyTheme(theme, persist) {
     if (theme === "dark") rootEl.setAttribute("data-theme", "dark");
     else rootEl.removeAttribute("data-theme");
     if (persist !== false) {
       try { localStorage.setItem("eft-theme", theme); } catch (e) {}
     }
     syncThemeButton();
+  }
+
+  function setTheme(theme, persist) {
+    // Crossfade the whole page when the browser supports View Transitions,
+    // otherwise the CSS colour transitions on the surfaces take over.
+    if (typeof document.startViewTransition === "function" && !motionQuery.matches) {
+      document.startViewTransition(() => applyTheme(theme, persist));
+    } else {
+      applyTheme(theme, persist);
+    }
   }
 
   if (themeBtn) {
@@ -428,12 +535,13 @@
     const coal = annualGen * CALC.coalPerKwh;
 
     const set = (id, value) => { const el = document.getElementById(id); if (el) el.textContent = value; };
-    set("calcOutDaily", inr(dailyGen, 1));
-    set("calcOutMonthly", inr(monthlyGen));
-    set("calcOutValue", inr(monthlyGen * price));
-    set("calcOutMonthlySaving", inr(monthlySaving));
-    set("calcOutAnnualSaving", inr(monthlySaving * 12));
-    set("calcOutCoverage", inr(coverage));
+    const roll = (id, value) => tweenText(document.getElementById(id), value);
+    roll("calcOutDaily", inr(dailyGen, 1));
+    roll("calcOutMonthly", inr(monthlyGen));
+    roll("calcOutValue", inr(monthlyGen * price));
+    roll("calcOutMonthlySaving", inr(monthlySaving));
+    roll("calcOutAnnualSaving", inr(monthlySaving * 12));
+    roll("calcOutCoverage", inr(coverage));
     set("capLabel", inr(capacity, 1) + " kW");
     set("panelLabel", panels + " × " + CALC.panelWp + " Wp");
     set("useLabel", inr(dailyUse) + " kWh");
@@ -516,6 +624,7 @@
     ];
     const host = $("#finRows");
     if (host) {
+      replay(host, "animate-swap");
       host.innerHTML = rows.map((r) => `<div class="fin-row">
         <span class="fin-label"><span class="dot" style="background:${r.dot}"></span>${r.label}</span>
         <b>${r.value < 0 ? "− " : ""}₹ ${inr(Math.abs(r.value))}</b>
@@ -527,7 +636,8 @@
     const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
     set("finInvestment", inr(FIN.initialInvestment));
     set("finSurplus", inr(annualSurplus));
-    set("finBreakEven", annualSurplus > 0 ? (FIN.initialInvestment / annualSurplus).toFixed(1) : "—");
+    tweenText(document.getElementById("finBreakEven"),
+      annualSurplus > 0 ? (FIN.initialInvestment / annualSurplus).toFixed(1) : "—");
     set("finModel", key === "scaled" ? "Three farms" : "Single farm");
     const note = $("#finNote");
     if (note) {

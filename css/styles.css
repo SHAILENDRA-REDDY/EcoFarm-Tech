@@ -207,6 +207,9 @@ svg { display: block; }
   background: rgba(244, 248, 245, 0.9);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid transparent;
+  justify-content: space-between;
+  container-type: inline-size;
+  container-name: topbar;
 }
 .topbar.scrolled { border-bottom-color: var(--line); }
 .topbar-titles {
@@ -241,27 +244,67 @@ svg { display: block; }
 }
 
 /* true centre on tablet and up, stacked flow on small screens */
-@media (min-width: 861px) {
-  .topbar { justify-content: space-between; }
+/* The top bar is its own size container: the centred title and the right-hand
+   actions are laid out against the width actually available to them, so the
+   title can never run underneath the clock (viewport queries cannot know that
+   the sidebar has taken 262px). */
+@container topbar (min-width: 700px) {
   .topbar-center {
     position: absolute; left: 50%; top: 50%;
     transform: translate(-50%, -50%);
     align-items: center; text-align: center;
+    /* never wider than the gap the two side clusters leave free */
+    max-width: min(560px, 46cqw);
   }
-  .topbar-actions { margin-left: auto; }
+}
+
+/* Narrow the right-hand cluster in steps so it always clears the title.
+   Widths are of the top bar itself, so the 262px sidebar is already accounted for. */
+@container topbar (max-width: 1440px) {
+  .profile-meta { display: none; }
+}
+@container topbar (max-width: 1390px) {
+  .clock-date { display: none; }
+}
+@container topbar (max-width: 1140px) {
+  .clock { display: none; }
 }
 
 .topbar-actions { margin-left: auto; display: flex; align-items: center; gap: 10px; }
 .clock {
-  display: flex; align-items: center; gap: 8px;
+  display: flex; align-items: center; gap: 9px;
   color: var(--ink-2); font-size: 12.5px; font-weight: 500;
-  padding: 8px 12px; border-radius: 999px;
+  padding: 6px 12px 6px 7px; border-radius: 999px;
   background: #fff; border: 1px solid var(--line);
   box-shadow: var(--shadow-sm);
   white-space: nowrap;
 }
-.clock .icon { width: 15px; height: 15px; color: var(--brand); }
-.clock .sep { width: 1px; height: 12px; background: var(--line-strong); }
+.clock-date {
+  display: inline-flex; align-items: center; gap: 9px;
+  color: var(--muted); font-size: 12px; font-weight: 500;
+}
+.clock-date::before {
+  content: ""; width: 1px; height: 13px; background: var(--line-strong);
+}
+.clock-time {
+  font-variant-numeric: tabular-nums;
+  font-size: 12.5px; font-weight: 650; color: var(--ink);
+  letter-spacing: .01em;
+}
+.live-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 3px 9px 3px 8px; border-radius: 999px;
+  background: linear-gradient(120deg, #e4f7ec, #f2fcf6);
+  border: 1px solid #c6e7d5;
+  color: #0f6b3d;
+  font-size: 9.5px; font-weight: 700;
+  letter-spacing: .09em; text-transform: uppercase;
+}
+.live-chip .pulse { width: 6px; height: 6px; }
+html[data-theme="dark"] .live-chip {
+  background: linear-gradient(120deg, #12351f, #103024);
+  border-color: #24573b; color: #6fdc9f;
+}
 
 .icon-btn {
   position: relative;
@@ -781,9 +824,6 @@ td .num { font-variant-numeric: tabular-nums; }
 .scrim.show { opacity: 1; visibility: visible; }
 
 /* ------------------------------------------------------------- responsive -- */
-@media (max-width: 1500px) {
-  .clock #clockDate, .clock .sep { display: none; }
-}
 @media (max-width: 1280px) {
   .dash-mid { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); }
   .dash-mid .quick-card { grid-column: 1 / -1; }
@@ -806,10 +846,6 @@ td .num { font-variant-numeric: tabular-nums; }
   .stat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .two-col, .equal-3 { grid-template-columns: minmax(0, 1fr); }
   .hero-facts { margin-left: 0; width: 100%; }
-}
-
-@media (max-width: 1260px) {
-  .clock { display: none; }
 }
 
 @media (max-width: 860px) {
@@ -1101,15 +1137,6 @@ html[data-theme="dark"] .field input::placeholder { color: var(--muted-light); }
 html[data-theme="dark"] .theme-btn { color: #f2c14e; border-color: var(--line-strong); }
 html[data-theme="dark"] .theme-btn:hover { color: #ffd873; }
 
-/* demo snapshot chip */
-.demo-chip {
-  display: inline-flex; align-items: center; gap: 5px;
-  padding: 2px 8px; border-radius: 999px;
-  font-size: 9.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
-  background: #fff5da; color: #9a7313; border: 1px solid #f0e2b8;
-}
-html[data-theme="dark"] .demo-chip { background: #2a2110; color: #ecc374; border-color: #3a2f14; }
-
 /* ==========================================================================
    BUSINESS PAGES — calculator, packages, finance, impact, registration, about
    ========================================================================== */
@@ -1390,3 +1417,110 @@ html[data-theme="dark"] .pump-ring.off { color: var(--muted); border-color: var(
 /* consent row in the enquiry form */
 .check-row { font-size: 11.8px; color: var(--muted); line-height: 1.5; }
 .check-row input { accent-color: var(--brand); }
+
+/* ==========================================================================
+   MOTION — page transitions, staggered entrances, chart swaps, theme crossfade
+   ========================================================================== */
+:root {
+  --motion-fast: .18s;
+  --motion: .32s;
+  --motion-slow: .55s;
+  --spring: cubic-bezier(.22, .61, .36, 1);
+}
+
+/* page swap */
+.page.active { animation: pageIn var(--motion) var(--spring) both; }
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* staggered entrance for the blocks of the active page */
+.page.active .stat,
+.page.active .card,
+.page.active .package,
+.page.active .owner-hero,
+.page.active .about-hero {
+  animation: cardIn var(--motion-slow) var(--spring) both;
+  animation-delay: calc(var(--i, 0) * 45ms);
+}
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(14px) scale(.995); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* charts */
+.chart-wrap { animation: chartIn .6s var(--spring) both; }
+@keyframes chartIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: none; }
+}
+.animate-swap { animation: swapIn .42s var(--spring) both; }
+@keyframes swapIn {
+  from { opacity: .12; transform: translateY(5px) scale(.998); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* bars grow from the baseline */
+.bar { transform-origin: bottom; animation: barGrow .7s var(--spring) both; }
+@keyframes barGrow {
+  from { transform: scaleY(.05); opacity: .35; }
+  to   { transform: scaleY(1); opacity: 1; }
+}
+
+/* donut reels in */
+.donut svg circle { animation: donutIn .8s var(--spring) both; transform-origin: 60px 60px; }
+@keyframes donutIn {
+  from { opacity: 0; transform: rotate(-24deg) scale(.9); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* interactive feedback */
+.card { transition: box-shadow var(--motion) var(--ease), border-color var(--motion) var(--ease); }
+.card:hover { border-color: #d8e8de; }
+html[data-theme="dark"] .card:hover { border-color: #26443a; }
+.stat, .package { transition: transform var(--motion) var(--spring), box-shadow var(--motion) var(--ease), border-color var(--motion) var(--ease); }
+.nav-item .icon, .menu-item .icon, .btn .icon { transition: transform var(--motion-fast) var(--spring); }
+.nav-item:hover .icon { transform: translateX(2px); }
+.btn:active { transform: scale(.985); }
+
+/* colour crossfade when the theme changes (fallback for browsers without
+   the View Transitions API) */
+body, .topbar, .sidebar, .card, .stat, .menu, .select, .btn-ghost, .doc, .zone,
+.mini, .field input, .field textarea, .note, .clock, .icon-btn, .profile-btn,
+.pill, .menu-item, .contact-row, .result-tile, .impact-tile, .package,
+.fin-row, tbody td, thead th, .switch, .meter-track {
+  transition: background-color var(--motion) ease, border-color var(--motion) ease,
+              color var(--motion-fast) ease, box-shadow var(--motion) ease;
+}
+
+/* View Transitions: smooth crossfade for theme switches */
+@supports (view-transition-name: none) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: .38s;
+    animation-timing-function: cubic-bezier(.4, 0, .2, 1);
+  }
+  ::view-transition-old(root) { animation-name: vtFadeOut; }
+  ::view-transition-new(root) { animation-name: vtFadeIn; }
+}
+@keyframes vtFadeOut { to { opacity: 0; } }
+@keyframes vtFadeIn { from { opacity: 0; } }
+
+/* the LIVE dot keeps a slow breathing halo */
+.live-chip .pulse { position: relative; }
+.live-chip .pulse::after {
+  content: ""; position: absolute; inset: -3px; border-radius: 50%;
+  border: 1px solid currentColor; opacity: 0; animation: haloIn 2.6s ease-out infinite;
+}
+@keyframes haloIn {
+  0% { opacity: .55; transform: scale(.7); }
+  70% { opacity: 0; transform: scale(1.5); }
+  100% { opacity: 0; transform: scale(1.5); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page.active, .page.active .stat, .page.active .card, .page.active .package,
+  .page.active .owner-hero, .page.active .about-hero, .chart-wrap, .bar,
+  .donut svg circle, .live-chip .pulse::after { animation: none !important; }
+}

@@ -7,6 +7,13 @@ this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ## [Unreleased]
 
 ### Added
+- **Live header clock** with a pulsing LIVE badge (replaces the fixed DEMO snapshot chip).
+  The chart peak note adapts to the current time so the 12:15 PM peak never contradicts
+  the clock.
+- **Motion layer**: page fade with staggered card entrances, animated chart swaps on the
+  range picker, growing bar charts and donut reveals, count-up figures in the calculator,
+  and a View Transitions crossfade when switching theme. All of it honours
+  `prefers-reduced-motion`.
 - **Dark mode** toggle in the top-right of the header, with a saved preference
   (`localStorage`), theme-aware charts and a chart palette driven by CSS variables.
 - **Savings & Impact** page: interactive solar savings calculator (capacity,
@@ -50,6 +57,10 @@ this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
   a script failed to load.
 - Leaf badge and centred highlighted title survive route changes.
 - Chart colours now follow the active theme instead of being hard-coded.
+- **Title/clock overlap in the header.** The bar is now a CSS size container, so the
+  centred title and the action cluster compress against the space that actually exists
+  (the 262px sidebar is no longer invisible to the layout logic).
+- `window.matchMedia` is feature-detected so the dashboard still boots where it is absent.
 
 ## [1.0.0] — 2026-11-04
 
