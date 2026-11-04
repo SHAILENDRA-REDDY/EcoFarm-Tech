@@ -98,6 +98,12 @@ Plus:
 - ♿ **Accessible** — labelled controls, `aria-pressed`/`role="switch"`, visible focus rings, reduced-motion support.
 - 🖨️ **Print stylesheet** — the Reports page prints cleanly.
 - ⚡ **Zero runtime dependencies** — no framework, no bundler, no build step.
+- 🎞️ **Motion** — page fades with staggered card entrances, animated chart swaps,
+  growing bars and donut reveals, count-up calculator figures, and a View Transitions
+  crossfade when the theme changes. Everything respects `prefers-reduced-motion`.
+- 🧭 **Overlap-proof header** — the centred title and the header actions are laid out
+  with CSS container queries against the bar's real width, so the clock can never slide
+  underneath the title, whatever the sidebar does.
 
 ---
 
@@ -214,9 +220,11 @@ EcoFarm-Tech/
 
 ## Demo data & consistency notes
 
-The dashboard shows a **fixed snapshot** (04 Nov 2026, 12:30 PM) rather than live
-telemetry, so the headline metrics, the 12:15 PM peak and the activity log always
-agree with each other.
+The header carries a **live ticking clock** next to a LIVE badge, so the interface
+feels current — but the underlying dataset is a fixed, illustrative sample rather
+than telemetry from hardware. To keep the story consistent, the chart's peak note
+adapts to the time of day: before 12:15 PM it reads *"Expected peak 8.5 kW around
+12:15 PM"*, afterwards *"Peak 8.5 kW at 12:15 PM"*.
 
 Review feedback has been applied:
 
@@ -224,7 +232,7 @@ Review feedback has been applied:
 |---|---|
 | 18 × 550 Wp was labelled 10 kWp | Capacity corrected to **9.9 kWp** in the dashboard, owner profile and settings |
 | November showed 22 generation days on 4 Nov | Reporting now shows **month-to-date figures for 4 generation days** (168.4 kWh generated, 109.2 kWh consumed, 59.2 kWh stored/exported) |
-| Peak 8.5 kW "at 12:15 PM" clashed with a 10:24 AM clock | Clock is a fixed **12:30 PM demo snapshot**, after the peak, with a "Demo" chip |
+| Peak 8.5 kW "at 12:15 PM" clashed with the header clock | Clock is now **live** and the peak note switches between "expected" and recorded depending on the current time |
 | Pay-per-use pricing was unexplained | **Pricing & Revenue** page explains metered kWh × agreed rate, monthly settlement and export caveats |
 | Grid export / net metering unqualified | Caveat card on **Solar Power** and in billing copy: export and credits depend on DISCOM approvals and regulations |
 | Owner profile exposed personal data | Phone, email, street address, coordinates, consumer number and emergency contact removed; the profile is masked and labelled fictional |
