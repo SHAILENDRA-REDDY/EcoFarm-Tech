@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Eco Farm Tech — Solar Energy Monitoring Dashboard</title>
+<meta name="description" content="Eco Farm Tech solar monitoring dashboard: generation, irrigation pump, battery, farm health, owner details and reports for Green Valley Farm." />
+<meta name="theme-color" content="#0b3a28" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/styles.css" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230b3a28'/%3E%3Cpath d='M16 25v-8' stroke='%2345c07c' stroke-width='2.4' stroke-linecap='round'/%3E%3Cpath d='M16 17c0-3.9-3.1-7-7-7 0 3.9 3.1 7 7 7z' fill='%2345c07c'/%3E%3Cpath d='M16 17c0-4.4 3.6-8 8-8 0 4.4-3.6 8-8 8z' fill='%23a7e5c2'/%3E%3C/svg%3E" />
+</head>
+<body>
+
+<!-- ============================== icon sprite ============================== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M12 21v-7.5"/><path d="M12 13.5c0-3.6-2.9-6.5-6.5-6.5 0 3.6 2.9 6.5 6.5 6.5z"/><path d="M12 13.5c0-4.1 3.4-7.5 7.5-7.5 0 4.1-3.4 7.5-7.5 7.5z"/><path d="M9 21h6"/></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.6 12 3.3l9 7.3"/><path d="M5.6 9.6V20.4h12.8V9.6"/><path d="M9.6 20.4v-5.6h4.8v5.6"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8.2" r="3.7"/><path d="M4.6 20.2c1.2-3.6 4-5.5 7.4-5.5s6.2 1.9 7.4 5.5"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.1"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M18.4 5.6 17 7M7 17l-1.4 1.4"/></symbol>
+    <symbol id="i-sprout" viewBox="0 0 24 24"><path d="M12 21v-6.5"/><path d="M12 14.5C12 11 9.3 8.3 5.8 8.3c0 3.5 2.7 6.2 6.2 6.2z"/><path d="M12 14.5c0-4 3.2-7.2 7.2-7.2 0 4-3.2 7.2-7.2 7.2z"/><path d="M8 21h8"/></symbol>
+    <symbol id="i-droplet" viewBox="0 0 24 24"><path d="M12 3.2c3.4 3.6 6 6.6 6 9.7a6 6 0 0 1-12 0c0-3.1 2.6-6.1 6-9.7z"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="M3.2 20.4h17.6"/><path d="M7 20.4v-6.2M12 20.4V6.4M17 20.4v-9"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.1"/><path d="M12 2.8v2.4M12 18.8v2.4M2.8 12h2.4M18.8 12h2.4M5.5 5.5l1.7 1.7M16.8 16.8l1.7 1.7M18.5 5.5l-1.7 1.7M7.2 16.8l-1.7 1.7"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M18 8.6a6 6 0 1 0-12 0c0 5.6-2 7.2-2 7.2h16s-2-1.6-2-7.2z"/><path d="M10.2 19.6a2 2 0 0 0 3.6 0"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21.2s6.8-6 6.8-11a6.8 6.8 0 1 0-13.6 0c0 5 6.8 11 6.8 11z"/><circle cx="12" cy="10" r="2.5"/></symbol>
+    <symbol id="i-panel" viewBox="0 0 24 24"><path d="M4.3 5.2h15.4l2 9.4H2.3z"/><path d="M9 5.2 8.1 14.6M15 5.2l.9 9.4M3 9.9h18"/><path d="M12 14.6v4.6M8.4 19.4h7.2"/></symbol>
+    <symbol id="i-device" viewBox="0 0 24 24"><rect x="6.5" y="6.5" width="11" height="11" rx="2.5"/><rect x="10.2" y="10.2" width="3.6" height="3.6" rx="1"/><path d="M10 3.2v3.3M14 3.2v3.3M10 17.5v3.3M14 17.5v3.3M3.2 10h3.3M3.2 14h3.3M17.5 10h3.3M17.5 14h3.3"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.8"/><path d="M12 6.8V12l3.3 2.1"/></symbol>
+    <symbol id="i-zap" viewBox="0 0 24 24"><path d="M13.2 2.4 4.8 13.6h5.6l-.8 8 9.6-11.6h-6.4z"/></symbol>
+    <symbol id="i-camera" viewBox="0 0 24 24"><path d="M3 8.4h3.1l1.6-2.2h6.9l1.6 2.2H21v11.2H3z"/><circle cx="12" cy="13.6" r="3.3"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m4.8 12.6 4.8 4.8L19.4 6.6"/></symbol>
+    <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M12 3.2a5.9 5.9 0 0 0-3.5 10.6c.5.4.8 1 .9 1.6l.1 1.2h5l.1-1.2c.1-.6.4-1.2.9-1.6A5.9 5.9 0 0 0 12 3.2z"/><path d="M9.5 19.4h5M10.4 21.6h3.2"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3.6v11.6"/><path d="m7.6 10.8 4.4 4.4 4.4-4.4"/><path d="M4.4 20.4h15.2"/></symbol>
+    <symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M4 12h15"/><path d="m13.2 6.2 5.8 5.8-5.8 5.8"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m6.5 9.5 5.5 5.5 5.5-5.5"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M3.6 7h16.8M3.6 12h16.8M3.6 17h16.8"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24"><path d="M6.3 3.4h3.1l1.5 3.8-2 1.4a11.6 11.6 0 0 0 5.5 5.5l1.4-2 3.8 1.5v3.1a2.2 2.2 0 0 1-2.4 2.2C10.4 18.3 5.7 13.6 4.1 5.8a2.2 2.2 0 0 1 2.2-2.4z"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5.4" width="18" height="13.2" rx="2.2"/><path d="m3.8 7 8.2 6 8.2-6"/></symbol>
+    <symbol id="i-idcard" viewBox="0 0 24 24"><rect x="2.8" y="5" width="18.4" height="14" rx="2.4"/><circle cx="8.6" cy="11" r="2.1"/><path d="M5.4 16.2c.6-1.8 1.9-2.6 3.2-2.6s2.6.8 3.2 2.6M14.4 9.8h4M14.4 13.2h4"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 5 6v6.1c0 4.3 2.9 7.7 7 9 4.1-1.3 7-4.7 7-9V6z"/><path d="m9 12 2.2 2.2L15.4 10"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3.4" y="5.2" width="17.2" height="15.4" rx="2.2"/><path d="M3.4 10h17.2M8.2 3v4M15.8 3v4"/></symbol>
+    <symbol id="i-card" viewBox="0 0 24 24"><rect x="2.8" y="5.4" width="18.4" height="13.2" rx="2.2"/><path d="M2.8 10h18.4M6.4 14.4h3.4"/></symbol>
+    <symbol id="i-file" viewBox="0 0 24 24"><path d="M13.6 3.2H6.6a1.8 1.8 0 0 0-1.8 1.8v14a1.8 1.8 0 0 0 1.8 1.8h10.8a1.8 1.8 0 0 0 1.8-1.8V8.6z"/><path d="M13.4 3.3v5.4h5.4M8.4 13h7.2M8.4 16.6h5.2"/></symbol>
+    <symbol id="i-wrench" viewBox="0 0 24 24"><path d="M15.2 3.4a5.4 5.4 0 0 0-4.6 8.1L3.6 18.5l1.9 1.9 7-7a5.4 5.4 0 0 0 6.6-7.5l-3.2 3.1-2.7-.7-.7-2.7z"/></symbol>
+    <symbol id="i-thermo" viewBox="0 0 24 24"><path d="M14 13.7V5.4a2 2 0 1 0-4 0v8.3a4 4 0 1 0 4 0z"/><path d="M12 9.4v5.6"/></symbol>
+    <symbol id="i-wind" viewBox="0 0 24 24"><path d="M3 8.4h9.2a2.6 2.6 0 1 0-2.6-2.6M3 12.4h13.4a2.6 2.6 0 1 1-2.6 2.6M3 16.4h6.6"/></symbol>
+    <symbol id="i-battery" viewBox="0 0 24 24"><rect x="2.6" y="7.4" width="16.4" height="9.2" rx="2.4"/><path d="M21.4 10.6v2.8"/><path d="M5.8 10.2h6.4v3.6H5.8z" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-gauge" viewBox="0 0 24 24"><path d="M4 17.4a8.6 8.6 0 1 1 16 0"/><path d="m12 13 4-4"/><circle cx="12" cy="14.2" r="1.4"/></symbol>
+    <symbol id="i-power" viewBox="0 0 24 24"><path d="M12 3.4v8"/><path d="M7 6.4a7.4 7.4 0 1 0 10 0"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M7.6 4.8 19 12 7.6 19.2z"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><path d="M8.4 5.2v13.6M15.6 5.2v13.6"/></symbol>
+    <symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 3.4 8.4 4.4-8.4 4.4L3.6 7.8z"/><path d="m3.6 12.2 8.4 4.4 8.4-4.4M3.6 16.4 12 20.8l8.4-4.4"/></symbol>
+    <symbol id="i-activity" viewBox="0 0 24 24"><path d="M3 12.4h3.6L9.4 5l4.2 14 2.4-6.6H21"/></symbol>
+    <symbol id="i-logout" viewBox="0 0 24 24"><path d="M14.4 4.4H6.6a2 2 0 0 0-2 2v11.2a2 2 0 0 0 2 2h7.8"/><path d="M15.6 12h5.2M18 8.6 21.4 12 18 15.4"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.8"/><path d="M12 11v5.4M12 7.8v.2"/></symbol>
+    <symbol id="i-print" viewBox="0 0 24 24"><path d="M7 8.4V3.6h10v4.8"/><rect x="3.6" y="8.4" width="16.8" height="8" rx="1.8"/><path d="M7 14.4h10v6H7z"/></symbol>
+    <symbol id="i-edit" viewBox="0 0 24 24"><path d="M16.4 3.8l3.8 3.8L8.6 19.2l-4.8 1 1-4.8z"/><path d="m14 6.2 3.8 3.8"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4.4" y="10.4" width="15.2" height="10.2" rx="2.4"/><path d="M8.2 10.4V7.6a3.8 3.8 0 0 1 7.6 0v2.8"/></symbol>
+    <symbol id="i-truck" viewBox="0 0 24 24"><path d="M2.8 6.4h10.4v10H2.8z"/><path d="M13.2 9.6h4l3.2 3.4v3.4h-7.2"/><circle cx="6.6" cy="18.2" r="1.8"/><circle cx="16.6" cy="18.2" r="1.8"/></symbol>
+    <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3.4" y="3.4" width="7.2" height="7.2" rx="1.8"/><rect x="13.4" y="3.4" width="7.2" height="7.2" rx="1.8"/><rect x="3.4" y="13.4" width="7.2" height="7.2" rx="1.8"/><rect x="13.4" y="13.4" width="7.2" height="7.2" rx="1.8"/></symbol>
+  </defs>
+</svg>
+
+<div class="app">
+
+  <!-- ================================ sidebar ============================== -->
+  <aside class="sidebar" id="sidebar">
+    <a class="brand" href="#dashboard" aria-label="Eco Farm Tech home">
+      <span class="brand-mark"><svg class="icon"><use href="#i-leaf"/></svg></span>
+      <span>
+        <span class="brand-name">Eco Farm Tech</span>
+        <span class="brand-tag">Clean Energy · Smart Farming</span>
+      </span>
+    </a>
+
+    <nav class="nav" aria-label="Main navigation">
+      <div class="nav-label">Overview</div>
+      <a class="nav-item active" href="#dashboard" data-page="dashboard"><svg class="icon"><use href="#i-home"/></svg><span>Dashboard</span></a>
+      <a class="nav-item" href="#owner" data-page="owner"><svg class="icon"><use href="#i-user"/></svg><span>Owner Profile</span></a>
+
+      <div class="nav-label">Monitoring</div>
+      <a class="nav-item" href="#solar" data-page="solar"><svg class="icon"><use href="#i-sun"/></svg><span>Solar Power</span></a>
+      <a class="nav-item" href="#monitoring" data-page="monitoring"><svg class="icon"><use href="#i-sprout"/></svg><span>Farm Monitoring</span></a>
+      <a class="nav-item" href="#irrigation" data-page="irrigation"><svg class="icon"><use href="#i-droplet"/></svg><span>Irrigation Control</span></a>
+
+      <div class="nav-label">Insights</div>
+      <a class="nav-item" href="#reports" data-page="reports"><svg class="icon"><use href="#i-chart"/></svg><span>Reports</span></a>
+      <a class="nav-item" href="#settings" data-page="settings"><svg class="icon"><use href="#i-settings"/></svg><span>Settings</span></a>
+    </nav>
+
+    <div class="sidebar-art">
+      <img src="assets/scene-crop.png" alt="Illustration of a solar array in a green farm field at sunrise" />
+      <div class="sidebar-slogan">
+        <p>Smarter Farms<br />Brighter Future</p>
+        <span><svg class="icon icon-sm" style="width:13px;height:13px"><use href="#i-leaf"/></svg> 100% clean energy</span>
+      </div>
+    </div>
+    <div class="sidebar-note">
+      Demo prototype · monitoring values are illustrative and not live readings from an installed system.
+    </div>
+  </aside>
+
+  <div class="scrim" id="scrim" hidden></div>
+
+  <!-- ================================= main ================================ -->
+  <div class="main">
+
+    <header class="topbar" id="topbar">
+      <button class="menu-btn" id="menuBtn" aria-label="Open navigation" aria-expanded="false">
+        <svg class="icon"><use href="#i-menu"/></svg>
+      </button>
+      <div class="topbar-titles">
+        <h1 id="pageTitle">Eco Farm Tech Dashboard</h1>
+        <p class="subtitle" id="pageSubtitle">Real-time Monitoring &amp; Control</p>
+      </div>
+
+      <div class="topbar-actions">
+        <div class="clock">
+          <svg class="icon"><use href="#i-calendar"/></svg>
+          <span id="clockDate">04 Nov 2026</span>
+          <span class="sep"></span>
+          <span id="clockTime">10:24 AM</span>
+        </div>
+
+        <div class="dropdown">
+          <button class="icon-btn" id="bellBtn" aria-label="Notifications (3 unread)" aria-expanded="false">
+            <svg class="icon"><use href="#i-bell"/></svg>
+            <span class="badge-dot">3</span>
+          </button>
+          <div class="menu alerts" id="bellMenu" role="menu">
+            <div class="menu-header"><strong>Notifications</strong><span>3 unread alerts</span></div>
+            <div class="alert-row"><span class="dot" style="background:#1e9e57"></span><div><strong>System status: Normal</strong><p>All connected devices reported in the last check · 10:20 AM</p></div></div>
+            <div class="alert-row"><span class="dot" style="background:#e6a700"></span><div><strong>Panel cleaning recommended</strong><p>Dust on strings 2–3 may reduce output by ~4% · 08:45 AM</p></div></div>
+            <div class="alert-row"><span class="dot" style="background:#2f7fd4"></span><div><strong>Battery reached 82%</strong><p>Charging continues in solar-direct mode · 09:45 AM</p></div></div>
+            <div class="menu-sep"></div>
+            <button class="menu-item" data-toast="Notifications marked as read (demo)."><svg class="icon"><use href="#i-check"/></svg> Mark all as read</button>
+          </div>
+        </div>
+
+        <div class="dropdown">
+          <button class="profile-btn" id="profileBtn" aria-expanded="false">
+            <span class="avatar">SR</span>
+            <span class="profile-meta"><strong>Farmer</strong><span>Owner account</span></span>
+            <svg class="icon icon-sm"><use href="#i-chevron"/></svg>
+          </button>
+          <div class="menu" id="profileMenu" role="menu">
+            <div class="menu-header"><strong>Shailendra Reddy</strong><span>Owner · Green Valley Farm</span></div>
+            <a class="menu-item" href="#owner"><svg class="icon"><use href="#i-user"/></svg> Owner profile</a>
+            <a class="menu-item" href="#settings"><svg class="icon"><use href="#i-settings"/></svg> Account settings</a>
+            <a class="menu-item" href="#reports"><svg class="icon"><use href="#i-file"/></svg> Billing &amp; statements</a>
+            <div class="menu-sep"></div>
+            <button class="menu-item" data-toast="Demo prototype — sign out is disabled."><svg class="icon"><use href="#i-logout"/></svg> Sign out</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="content">
+
+      <!-- ============================== DASHBOARD ============================ -->
+      <section class="page active" id="page-dashboard">
+
+        <div class="stat-grid">
+          <article class="stat amber">
+            <div class="stat-top">
+              <span class="stat-ico"><svg class="icon"><use href="#i-sun"/></svg></span>
+              <span class="stat-label">Solar Power Generation</span>
+            </div>
+            <p class="stat-value">8.5<span>kW</span></p>
+            <p class="stat-sub">Current output · peak today</p>
+          </article>
+
+          <article class="stat green">
+            <div class="stat-top">
+              <span class="stat-ico"><svg class="icon"><use href="#i-zap"/></svg></span>
+              <span class="stat-label">Total Energy Generated</span>
+            </div>
+            <p class="stat-value">42.3<span>kWh</span></p>
+            <p class="stat-sub">Today · since 6:12 AM</p>
+          </article>
+
+          <article class="stat blue">
+            <div class="stat-top">
+              <span class="stat-ico"><svg class="icon"><use href="#i-droplet"/></svg></span>
+              <span class="stat-label">Water Pump Status</span>
+            </div>
+            <p class="stat-value" data-pump-state>ON</p>
+            <p class="stat-sub status-inline"><span class="pulse" data-pump-pulse></span><span data-pump-sub>Irrigation Running</span></p>
+          </article>
+
+          <article class="stat violet">
+            <div class="stat-top">
+              <span class="stat-ico"><svg class="icon"><use href="#i-sprout"/></svg></span>
+              <span class="stat-label">Farm Health</span>
+            </div>
+            <p class="stat-value">Good</p>
+            <p class="stat-sub">Soil &amp; Crop Condition</p>
+          </article>
+        </div>
+
+        <div class="dash-mid">
+          <!-- generation chart -->
+          <article class="card">
+            <div class="card-head">
+              <svg class="icon"><use href="#i-activity"/></svg>
+              <h3>Solar Energy Generation</h3>
+              <span class="spacer"></span>
+              <select class="select" id="rangeSelect" aria-label="Choose chart range">
+                <option value="today" selected>Today</option>
+                <option value="week">This week</option>
+                <option value="month">This month</option>
+              </select>
+            </div>
+            <div class="chart-wrap" id="genChart"></div>
+            <div class="chart-legend">
+              <span class="legend-item"><span class="legend-swatch" style="background:#1e9e57"></span> Output (kW)</span>
+              <span class="legend-item" id="chartFootnote">Peak 8.5 kW at 12:15 PM</span>
+              <span class="legend-item" style="margin-left:auto">Sunrise 6:12 AM · Sunset 6:04 PM</span>
+            </div>
+          </article>
+
+          <!-- live view -->
+          <article class="card live-card">
+            <div class="card-head">
+              <svg class="icon"><use href="#i-camera"/></svg>
+              <h3>Live Farm View</h3>
+              <span class="spacer"></span>
+              <span class="live-badge"><span class="pulse"></span> Live</span>
+            </div>
+            <div class="live-frame">
+              <img src="assets/farm-live.jpg" alt="Solar array beside irrigated vegetable crop rows at Green Valley Farm" />
+              <div class="live-caption">
+                <span>Solar Panel Farm — Zone 1</span>
+                <span class="live-pill"><span class="pulse" style="width:6px;height:6px"></span> CAM 01</span>
+              </div>
+            </div>
+            <div class="live-meta">
+              <span><strong>18</strong> panels · ground mount</span>
+              <span>Updated <strong>just now</strong></span>
+            </div>
+          </article>
+
+          <!-- quick info -->
+          <article class="card quick-card">
+            <div class="card-head">
+              <svg class="icon"><use href="#i-leaf"/></svg>
+              <h3>Quick Info</h3>
+            </div>
+            <dl class="info-list">
+              <div class="info-row">
+                <span class="info-ico"><svg class="icon"><use href="#i-pin"/></svg></span>
+                <div><dt>Location</dt><dd>Green Valley Farm<small>Kurnool, Andhra Pradesh</small></dd></div>
+              </div>
+              <div class="info-row">
+                <span class="info-ico"><svg class="icon"><use href="#i-panel"/></svg></span>
+                <div><dt>System Capacity</dt><dd>10 kW</dd></div>
+              </div>
+              <div class="info-row">
+                <span class="info-ico"><svg class="icon"><use href="#i-device"/></svg></span>
+                <div><dt>Connected Devices</dt><dd>Solar Panels · Inverter · Pump</dd>
+                </div>
+              </div>
+              <div class="info-row">
+                <span class="info-ico"><svg class="icon"><use href="#i-clock"/></svg></span>
+                <div><dt>Last Updated</dt><dd id="lastUpdated">04 Nov 2026 · 10:24 AM</dd></div>
+              </div>
+            </dl>
+          </article>
+        </div>
+
+        <!-- today's energy flow -->
+        <article class="card" style="margin-bottom:16px">
+          <div class="card-head">
+            <svg class="icon"><use href="#i-layers"/></svg>
+            <h3>Today&rsquo;s Energy Flow</h3>
+            <span class="spacer"></span>
+            <span class="pill">System status: Normal</span>
+          </div>
+          <div class="mini-grid flow-grid">
+            <div class="mini"><span>Generated today</span><strong>42.3<small>kWh</small></strong></div>
+            <div class="mini"><span>Irrigation pump</span><strong>18.6<small>kWh</small></strong></div>
+            <div class="mini"><span>Other farm loads</span><strong>5.8<small>kWh</small></strong></div>
+            <div class="mini"><span>Sent to storage</span><strong>6.0<small>kWh</small></strong></div>
+            <div class="mini"><span>Battery level</span><strong>82<small>%</small></strong></div>
+          </div>
+          <p class="card-sub" style="margin-top:12px;margin-bottom:0">Energy routed from the solar array through the inverter to the pump, farm loads and the optional 5 kWh battery bank. All figures are sample demo values.</p>
+        </article>
+
+        <div class="dash-bottom">
+          <!-- energy usage -->
+          <article class="card">
+            <div class="card-head">
+              <svg class="icon"><use href="#i-zap"/></svg>
+              <h3>Energy Usage</h3>
+            </div>
+            <div class="donut-wrap">
+              <div class="donut" id="usageDonut">
+                <svg viewBox="0 0 120 120" aria-hidden="true"></svg>
+                <div class="donut-center"><strong>68%</strong><span>Used Today</span></div>
+              </div>
+              <ul class="donut-legend">
+                <li><span class="dot" style="background:#14854a"></span> Irrigation Pump <span class="pct">68%</span></li>
+                <li><span class="dot" style="background:#3d8fdd"></span> Farm Equipment <span class="pct">15%</span></li>
+                <li><span class="dot" style="background:#f0b429"></span> Lighting <span class="pct">7%</span></li>
+                <li><span class="dot" style="background:#b3c4ba"></span> Others <span class="pct">10%</span></li>
+              </ul>
+            </div>
+            <div class="note" style="margin-top:14px">
+              <svg class="icon"><use href="#i-battery"/></svg>
+              <span>Battery bank at <strong>82%</strong> (5 kWh LFP) · 6.0 kWh charged today.</span>
+            </div>
+          </article>
+
+          <!-- recent activity -->
+          <article class="card">
+            <div class="card-head">
+              <svg class="icon"><use href="#i-clock"/></svg>
+              <h3>Recent Activity</h3>
+              <span class="spacer"></span>
+              <a class="pill gray" href="#reports">View log</a>
+            </div>
+            <ul class="activity">
+              <li class="act-row">
+                <span class="act-ico amber"><svg class="icon"><use href="#i-sun"/></svg></span>
+                <div class="act-body"><strong>Solar power generated</strong><span>Today · 10:22 AM</span></div>
+                <div class="act-value">8.5 kW<span>current</span></div>
+              </li>
+              <li class="act-row">
+                <span class="act-ico blue"><svg class="icon"><use href="#i-droplet"/></svg></span>
+                <div class="act-body"><strong>Irrigation pump turned ON</strong><span>Today · 10:15 AM</span></div>
+                <div class="act-value">Zone 1<span>running</span></div>
+              </li>
+              <li class="act-row">
+                <span class="act-ico green"><svg class="icon"><use href="#i-battery"/></svg></span>
+                <div class="act-body"><strong>Battery level</strong><span>Today · 09:45 AM</span></div>
+                <div class="act-value">78% → 82%<span>charging</span></div>
+              </li>
+              <li class="act-row">
+                <span class="act-ico violet"><svg class="icon"><use href="#i-sprout"/></svg></span>
+                <div class="act-body"><strong>Soil moisture</strong><span>Today · 09:30 AM</span></div>
+                <div class="act-value">Good<span>68%</span></div>
+              </li>
+              <li class="act-row">
+                <span class="act-ico green"><svg class="icon"><use href="#i-check"/></svg></span>
+                <div class="act-body"><strong>Daily system self-check</strong><span>Today · 06:05 AM</span></div>
+                <div class="act-value">Normal<span>passed</span></div>
+              </li>
+            </ul>
+          </article>
+
+          <!-- alerts -->
+          <article class="card alerts-card" style="display:flex;flex-direction:column">
+            <div class="card-head">
+              <svg class="icon"><use href="#i-bell"/></svg>
+              <h3>Alerts &amp; Recommendations</h3>
+            </div>
+            <div class="alert-card-ok">
+              <span class="ok-ico"><svg class="icon"><use href="#i-check"/></svg></span>
+              <div>
+                <strong>All systems are working fine!</strong>
+                <p>No immediate issues detected across panels, inverter and pump.</p>
+              </div>
+            </div>
+            <div class="tip-row">
+              <span class="tip-ico"><svg class="icon"><use href="#i-bulb"/></svg></span>
+              <div>
+                <strong>Tip</strong>
+                <p>Consider cleaning solar panels for better efficiency — dusty modules can lose 3–5% of daily output.</p>
+              </div>
+            </div>
+            <div class="tip-row">
+              <span class="tip-ico"><svg class="icon"><use href="#i-info"/></svg></span>
+              <div>
+                <strong>Scheduled maintenance</strong>
+                <p>Next inverter inspection due on 18 Nov 2026 with the assigned technician.</p>
+              </div>
+            </div>
+            <div style="margin-top:auto;padding-top:16px">
+              <a class="btn btn-primary" href="#monitoring">View Details <svg class="icon"><use href="#i-arrow-right"/></svg></a>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- ============================= OWNER PROFILE ========================= -->
+      <section class="page" id="page-owner">
+        <div class="owner-hero">
+          <div class="owner-avatar">SR</div>
+          <div class="owner-id">
+            <h2>Shailendra Reddy <span class="pill"><svg class="icon" style="width:12px;height:12px"><use href="#i-shield"/></svg> Verified owner</span></h2>
+            <p class="role">Farm Owner &amp; Operator · Green Valley Farm, Kurnool</p>
+            <div class="owner-tags">
+              <span class="pill gray"><svg class="icon" style="width:12px;height:12px"><use href="#i-idcard"/></svg> Owner ID EFT-OWN-1042</span>
+              <span class="pill blue"><svg class="icon" style="width:12px;height:12px"><use href="#i-card"/></svg> Pay-per-use plan</span>
+              <span class="pill amber"><svg class="icon" style="width:12px;height:12px"><use href="#i-calendar"/></svg> Member since Mar 2024</span>
+            </div>
+          </div>
+          <div class="owner-hero-actions">
+            <button class="btn btn-ghost" data-toast="Demo prototype — profile editing is disabled."><svg class="icon"><use href="#i-edit"/></svg> Edit details</button>
+            <button class="btn btn-primary" data-toast="Statement download started (demo file)."><svg class="icon"><use href="#i-download"/></svg> Statement</button>
+          </div>
+        </div>
+
+        <div class="two-col" style="margin-bottom:16px">
+          <article class="card">
+            <div class="card-head">
+              <svg class="icon"><use href="#i-user"/></svg>
+              <h3>Owner Details</h3>
+              <span class="spacer"></span>
+              <span class="pill gray">Primary account holder</span>
+            </div>
+            <dl class="detail-grid">
+              <div class="detail"><dt>Full name</dt><dd>Shailendra Reddy</dd></div>
+              <div class="detail"><dt>Owner / customer ID</dt><dd>EFT-OWN-1042</dd></div>
+              <div class="detail"><dt>Mobile number</dt><dd>+91 98••• ••210 <small>(verified)</small></dd></div>
+              <div class="detail"><dt>Email address</dt><dd>s.reddy@greenvalleyfarm.in</dd></div>
+              <div class="detail"><dt>Role</dt><dd>Owner &amp; farm operator</dd></div>
+              <div class="detail"><dt>Preferred language</dt><dd>English · తెలుగు</dd></div>
+              <div class="detail" style="grid-column:1/-1"><dt>Address</dt><dd>Survey No. 142/2, Green Valley Farm, Nandyal Road,<br />Kurnool district, Andhra Pradesh — 518001, India</dd></div>
+              <div class="detail"><dt>Emergency contact</dt><dd>Lakshmi Reddy · +91 90••• ••844</dd></div>
+              <div class="detail"><dt>KYC status</dt><dd><span class="pill">Verified</span></dd></div>
+              <div class="detail"><dt>Registered on</dt><dd>18 March 2024</dd></div>
+              <div class="detail"><dt>Last login</dt><dd>Today · 09:58 AM</dd></div>
+            </dl>
+          </article>
+
+          <article class="card">
+            <div class="card-head">
+              <svg class="icon"><use href="#i-card"/></svg>
+              <h3>Subscription &amp; Billing</h3>
+            </div>
+            <dl class="detail-grid">
+              <div class="detail"><dt>Plan</dt><dd>Pay-per-use (monitored)</dd></div>
+              <div class="detail"><dt>Applicable tariff</dt><dd>₹ 4.20 / kWh <small>illustrative</small></dd></div>
+              <div class="detail"><dt>Dashboard access</dt><dd>Included · monthly</dd></div>
+              <div class="detail"><dt>Billing cycle</dt><dd>1st – last day of month</dd></div>
+              <div class="detail"><dt>Last invoice</dt><dd>₹ 2,864 · Oct 2026</dd></div>
+              <div class="detail"><dt>Next invoice</dt><dd>01 Dec 2026</dd></div>
+              <div class="detail"><dt>Payment method</dt><dd>UPI · ****@okaxis</dd></div>
+              <div class="detail"><dt>Account standing</dt><dd><span class="pill">Up to date</span></dd></div>
+            </dl>
+            <div class="note" style="margin-top:16px">
+              <svg class="icon"><use href="#i-info"/></svg>
+              <span>Tariffs and invoices are demo values. Any real electricity tariff or sale price must be checked against applicable regulations.</span>
+            </div>
+          </article>
+        </div>
+
+        <div class="two-col" style="margin-bottom:16px">
+          <article class="card">
+            <div class="card-head">
+              <svg class="icon"><use href="#i-sprout"/></svg>
+              <h3>Farm Details</h3>
+            </div>
+            <dl class="detail-grid">
+              <div class="detail"><dt>Farm name</dt><dd>Green Valley Farm</dd></div>
+              <div class="detail"><dt>Survey / plot no.</dt><dd>142/2, 142/3</dd></div>
+              <div class="detail"><dt>Total area</dt><dd>8.5 acres</dd></div>
+              <div class="detail"><dt>Net irrigated area</dt><dd>6.2 acres</dd></div>
+              <div class="detail"><dt>Soil type</dt><dd>Red loam</dd></div>
+              <div class="detail"><dt>Water source</dt><dd>Borewell + farm pond</dd></div>
+              <div class="detail"><dt>Crops grown</dt><dd>Tomato, chilli, leafy vegetables</dd></div>
+              <div class="detail"><dt>Irrigation method</dt><dd>Sprinkler &amp; drip</dd></div>
+              <div class="detail"><dt>Village / mandal</dt><dd>Nandyal Road · Kurnool</dd></div>
+              <div class="detail"><dt>Coordinates</dt><dd>15.8281° N, 78.0373° E</dd></div>
+            </dl>
+          </article>
+
+          <article class="card">
+            <div class="card-head">
+              <svg class="icon"><use href="#i-panel"/></svg>
+              <h3>Solar System Details</h3>
+            </div>
+            <dl class="detail-grid">
+              <div class="detail"><dt>Installed capacity</dt><dd>10 kWp</dd></div>
+              <div class="detail"><dt>Commissioned on</dt><dd>12 June 2024</dd></div>
+              <div class="detail"><dt>Modules</dt><dd>18 × 550 Wp monocrystalline</dd></div>
+              <div class="detail"><dt>Inverter</dt><dd>10 kW hybrid, string type</dd></div>
+              <div class="detail"><dt>Battery (optional)</dt><dd>5 kWh LFP · 82% charge</dd></div>
+              <div class="detail"><dt>Mounting</dt><dd>Ground mount, fixed tilt 15°</dd></div>
+              <div class="detail"><dt>DISCOM consumer no.</dt><dd>4412 8890 21 · APSPDCL</dd></div>
+              <div class="detail"><dt>Metering</dt><dd>Net metering, bidirectional</dd></div>
+              <div class="detail"><dt>Warranty</dt><dd>Panels 25 yrs · Inverter 5 yrs</dd></div>
+              <div class="detail"><dt>System status</dt><dd><span class="pill">Normal</span></dd></div>
+            </dl>
+          </article>
+        </div>
+
+        <div class="equal-3">
+          <article class="card">
+            <div class="card-head">
+              <svg class="icon"><use href="#i-file"/></svg>
+              <h3>Documents</h3>
+            </div>
+            <div class="doc-list">
+              <button class="doc" data-toast="Opening agreement (demo)."><span class="doc-ico"><svg class="icon"><use href="#i-file"/></svg></span><span><strong>Service agreement</strong><span>PDF · 240 KB · 18 Mar 2024</span></span><svg class="icon icon-sm"><use href="#i-download"/></svg></button>
+              <button class="doc" data-toast="Opening net-metering approval (demo)."><span class="doc-ico"><svg class="icon"><use href="#i-file"/></svg></span><span><strong>Net-metering approval</strong><span>PDF · 180 KB · 02 Jun 2024</span></span><svg class="icon icon-sm"><use href="#i-download"/></svg></button>
+              <button class="doc" data-toast="Opening warranty card (demo)."><span class="doc-ico"><svg class="icon"><use href="#i-file"/></svg></span><span><strong>Panel warranty card</strong><span>PDF · 96 KB · 12 Jun 2024</span></span><svg class="icon icon-sm"><use href="#i-download"/></svg></button>
+              <button class="doc" data-toast="Opening insurance policy (demo)."><span class="doc-ico"><svg class="icon"><use href="#i-shield"/></svg></span><span><strong>Insurance policy</strong><span>PDF · 320 KB · 01 Jul 2026</span></span><svg class="icon icon-sm"><use href="#i-download"/></svg></button>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-head">
+              <svg class="icon"><use href="#i-wrench"/></svg>
+              <h3>Service &amp; Support</h3>
+            </div>
+            <dl class="detail-grid" style="grid-template-columns:minmax(0,1fr)">
+              <div class="detail"><dt>Assigned technician</dt><dd>Ravi Kumar · Field engineer</dd></div>
+              <div class="detail"><dt>Support number</dt><dd>+91 80••• ••145</dd></div>
+              <div class="detail"><dt>Response time</dt><dd>Within 24 hours (working days)</dd></div>
+              <div class="detail"><dt>Last service visit</dt><dd>22 Sep 2026 · panel cleaning</dd></div>
+              <div class="detail"><dt>Next scheduled visit</dt><dd>18 Nov 2026 · inverter inspection</dd></div>
+            </dl>
+            <button class="btn btn-ghost btn-sm" style="margin-top:14px" data-toast="Service request raised (demo)."><svg class="icon"><use href="#i-phone"/></svg> Request service</button>
+          </article>
+
+          <article class="card">
+            <div class="card-head">
+              <svg class="icon"><use href="#i-activity"/></svg>
+              <h3>Account Activity</h3>
+            </div>
+            <ul class="activity">
+              <li class="act-row"><span class="act-ico green"><svg class="icon"><use href="#i-check"/></svg></span><div class="act-body"><strong>Monthly statement generated</strong><span>01 Nov 2026</span></div></li>
+              <li class="act-row"><span class="act-ico blue"><svg class="icon"><use href="#i-card"/></svg></span><div class="act-body"><strong>Invoice paid via UPI</strong><span>03 Nov 2026 · ₹ 2,864</span></div></li>
+              <li class="act-row"><span class="act-ico amber"><svg class="icon"><use href="#i-bell"/></svg></span><div class="act-body"><strong>Alert threshold updated</strong><span>28 Oct 2026 · low battery 20%</span></div></li>
+              <li class="act-row"><span class="act-ico violet"><svg class="icon"><use href="#i-wrench"/></svg></span><div class="act-body"><strong>Service visit completed</strong><span>22 Sep 2026 · panel cleaning</span></div></li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <!-- ============================== SOLAR POWER ========================== -->
+      <section class="page" id="page-solar">
+        <div class="stat-grid">
+          <article class="stat green">
+            <div class="stat-top"><span class="stat-ico"><svg class="icon"><use href="#i-zap"/></svg></span><span class="stat-label">Generated Today</span></div>
+            <p class="stat-value">42.3<span>kWh</span></p><p class="stat-sub">Peak 8.5 kW at 12:15 PM</p>
+          </article>
+          <article class="stat amber">
+            <div class="stat-top"><span class="stat-ico"><svg class="icon"><use href="#i-sun"/></svg></span><span class="stat-label">Yesterday</span></div>
+            <p class="stat-value">32.4<span>kWh</span></p><p class="stat-sub">+30.6% vs previous day</p>
+          </article>
+          <article class="stat blue">
+            <div class="stat-top"><span class="stat-ico"><svg class="icon"><use href="#i-calendar"/></svg></span><span class="stat-label">This Month</span></div>
+            <p class="stat-value">1,046<span>kWh</span></p><p class="stat-sub">Across 22 generation days</p>
+          </article>
+          <article class="stat violet">
+            <div class="stat-top"><span class="stat-ico"><svg class="icon"><use href="#i-gauge"/></svg></span><span class="stat-label">Performance Ratio</span></div>
+            <p class="stat-value">91<span>%</span></p><p class="stat-sub">Normal for season</p>
+          </article>
+        </div>
+
+        <div class="two-col" style="margin-bottom:16px">
+          <article class="card">
+            <div class="card-head">
+              <svg class="icon"><use href="#i-activity"/></svg>
+              <h3>Generation Curve</h3>
+              <span class="spacer"></span>
+              <span class="pill">Today</span>
+            </div>
+            <div class="chart-wrap" id="solarChart"></div>
+          </article>
+
+          <article class="card">
+            <div class="card-head">
+              <svg class="icon"><use href="#i-chart"/></svg>
+              <h3>Last 7 Days</h3>
+              <span class="spacer"></span>
+              <span class="pill gray">kWh / day</span>
+            </div>
+            <div class="bars" id="weekBars"></div>
+            <p class="card-sub" style="margin-top:14px;margin-bottom:0">Weakest day: 32.4 kWh (cloud cover). Best day: 42.3 kWh (today).</p>
+          </article>
+        </div>
+
+        <div class="two-col" style="margin-bottom:16px">
+          <article class="card">
+            <div class="card-head">
+              <svg class="icon"><use href="#i-layers"/></svg>
+              <h3>Daily Energy Breakdown</h3>
+              <span class="spacer"></span>
+              <span class="pill gray">Demo values</span>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Stream</th><th>Energy</th><th>Share</th><th>Status</th></tr></thead>
+                <tbody>
+                  <tr><td><strong>Generated by array</strong></td><td class="num">42.3 kWh</td><td class="num">100%</td><td><span class="pill">Normal</span></td></tr>
+                  <tr><td>Irrigation pump</td><td class="num">18.6 kWh</td><td class="num">44.0%</td><td><span class="pill blue">In use</span></td></tr>
+                  <tr><td>Other farm loads</td><td class="num">5.8 kWh</td><td class="num">13.7%</td><td><span class="pill gray">Routine</span></td></tr>
+                  <tr><td>Sent to storage</td><td class="num">6.0 kWh</td><td class="num">14.2%</td><td><span class="pill amber">82% charged</span></td></tr>
+                  <tr><td>Exported to grid</td><td class="num">11.9 kWh</td><td class="num">28.1%</td><td><span class="pill">Credited</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-head">
+              <svg class="icon"><use href="#i-panel"/></svg>
+              <h3>Panel Strings</h3>
+              <span class="spacer"></span>
+              <span class="pill gray">18 modules</span>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>String</th><th>Output</th><th>Voltage</th><th>Temp</th><th></th></tr></thead>
+                <tbody>
+                  <tr><td><strong>A1</strong> · 6 modules</td><td class="num">2.9 kW</td><td class="num">312 V</td><td class="num">41 °C</td><td><span class="pill">OK</span></td></tr>
+                  <tr><td><strong>A2</strong> · 6 modules</td><td class="num">2.8 kW</td><td class="num">309 V</td><td class="num">43 °C</td><td><span class="pill">OK</span></td></tr>
+                  <tr><td><strong>B1</strong> · 6 modules</td><td class="num">2.8 kW</td><td class="num">305 V</td><td class="num">44 °C</td><td><span class="pill amber">Dust</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="note" style="margin-top:14px">
+              <svg class="icon"><use href="#i-info"/></svg>
+              <span>String B1 is 4% below expected output — schedule module cleaning.</span>
+            </div>
+          </article>
+        </div>
+
+        <div class="equal-3">
+          <article class="card">
+            <div class="card-head"><svg class="icon"><use href="#i-device"/></svg><h3>Inverter</h3></div>
+            <dl class="detail-grid" style="grid-template-columns:minmax(0,1fr)">
+              <div class="detail"><dt>Model</dt><dd>10 kW hybrid string inverter</dd></div>
+              <div class="detail"><dt>DC input</dt><dd>8.6 kW</dd></div>
+              <div class="detail"><dt>AC output</dt><dd>8.5 kW</dd></div>
+              <div class="detail"><dt>Efficiency</dt><dd>97.4%</dd></div>
+              <div class="detail"><dt>Status</dt><dd><span class="pill">Running normally</span></dd></div>
+            </dl>
+          </article>
+          <article class="card">
+            <div class="card-head"><svg class="icon"><use href="#i-battery"/></svg><h3>Battery Bank</h3></div>
+            <div class="meter" style="margin-bottom:14px">
+              <div class="meter-top"><span>State of charge</span><strong>82%</strong></div>
+              <div class="meter-track"><div class="meter-fill" style="width:82%"></div></div>
+            </div>
+            <dl class="detail-grid" style="grid-template-columns:minmax(0,1fr)">
+              <div class="detail"><dt>Capacity</dt><dd>5 kWh LFP</dd></div>
+              <div class="detail"><dt>Charged today</dt><dd>6.0 kWh</dd></div>
+              <div class="detail"><dt>Mode</dt><dd>Charging from solar</dd></div>
+              <div class="detail"><dt>Health</dt><dd><span class="pill">Good</span></dd></div>
+            </dl>
+          </article>
+          <article class="card">
+            <div class="card-head"><svg class="icon"><use href="#i-sun"/></svg><h3>Solar Conditions</h3></div>
+            <dl class="detail-grid" style="grid-template-columns:minmax(0,1fr)">
+              <div class="detail"><dt>Irradiance</dt><dd>842 W/m²</dd></div>
+              <div class="detail"><dt>Module temperature</dt><dd>44 °C</dd></div>
+              <div class="detail"><dt>Ambient temperature</dt><dd>29 °C</dd></div>
+              <div class="detail"><dt>Sunshine hours today</dt><dd>6 h 42 m</dd></div>
+              <div class="detail"><dt>Sky</dt><dd>Clear · light wind</dd></div>
+            </dl>
+          </article>
+        </div>
+      </section>
+
+      <!-- =========================== FARM MONITORING ========================= -->
+      <section class="page" id="page-monitoring">
+        <div class="stat-grid">
+          <article class="stat green">
+            <div class="stat-top"><span class="stat-ico"><svg class="icon"><use href="#i-droplet"/></svg></span><span class="stat-label">Soil Moisture</span></div>
+            <p class="stat-value">68<span>%</span></p><p class="stat-sub">Average across 3 zones</p>
+          </article>
+          <article class="stat amber">
+            <div class="stat-top"><span class="stat-ico"><svg class="icon"><use href="#i-thermo"/></svg></span><span class="stat-label">Soil Temperature</span></div>
+            <p class="stat-value">24.5<span>°C</span></p><p class="stat-sub">10 cm depth</p>
+          </article>
+          <article class="stat blue">
+            <div class="stat-top"><span class="stat-ico"><svg class="icon"><use href="#i-wind"/></svg></span><span class="stat-label">Humidity</span></div>
+            <p class="stat-value">62<span>%</span></p><p class="stat-sub">Relative, field level</p>
+          </article>
+          <article class="stat violet">
+            <div class="stat-top"><span class="stat-ico"><svg class="icon"><use href="#i-sprout"/></svg></span><span class="stat-label">Crop Health</span></div>
+            <p class="stat-value">Good</p><p class="stat-sub">No stress detected</p>
+          </article>
+        </div>
+
+        <div class="two-col" style="margin-bottom:16px">
+          <article class="card">
+            <div class="card-head"><svg class="icon"><use href="#i-sprout"/></svg><h3>Field Zones</h3><span class="spacer"></span><span class="pill gray">Updated 10:24 AM</span></div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Zone</th><th>Crop</th><th>Moisture</th><th>Soil temp</th><th>Status</th></tr></thead>
+                <tbody>
+                  <tr><td><strong>Zone 1</strong></td><td>Tomato</td><td class="num">72%</td><td class="num">24.1 °C</td><td><span class="pill">Irrigating</span></td></tr>
+                  <tr><td><strong>Zone 2</strong></td><td>Chilli</td><td class="num">66%</td><td class="num">24.8 °C</td><td><span class="pill">Good</span></td></tr>
+                  <tr><td><strong>Zone 3</strong></td><td>Leafy vegetables</td><td class="num">61%</td><td class="num">25.0 °C</td><td><span class="pill amber">Monitor</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="note" style="margin-top:14px">
+              <svg class="icon"><use href="#i-info"/></svg>
+              <span>Zone 3 moisture is trending down — next irrigation cycle recommended within 6 hours.</span>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-head"><svg class="icon"><use href="#i-activity"/></svg><h3>Crop Condition</h3></div>
+            <div class="stack" style="gap:16px">
+              <div class="meter"><div class="meter-top"><span>Leaf vigour index</span><strong>88%</strong></div><div class="meter-track"><div class="meter-fill" style="width:88%"></div></div></div>
+              <div class="meter"><div class="meter-top"><span>Canopy coverage</span><strong>76%</strong></div><div class="meter-track"><div class="meter-fill blue" style="width:76%"></div></div></div>
+              <div class="meter"><div class="meter-top"><span>Pest / disease risk</span><strong>Low</strong></div><div class="meter-track"><div class="meter-fill" style="width:22%"></div></div></div>
+              <div class="meter"><div class="meter-top"><span>Nutrient balance</span><strong>Good</strong></div><div class="meter-track"><div class="meter-fill amber" style="width:64%"></div></div></div>
+            </div>
+            <div class="note" style="margin-top:16px">
+              <svg class="icon"><use href="#i-bulb"/></svg>
+              <span>Soil and crop readings are indicative dashboard samples, not agronomy advice.</span>
+            </div>
+          </article>
+        </div>
+
+        <article class="card">
+          <div class="card-head"><svg class="icon"><use href="#i-device"/></svg><h3>Field Sensors</h3><span class="spacer"></span><span class="pill">5 connected</span></div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Sensor</th><th>Location</th><th>Last reading</th><th>Battery</th><th>Link</th></tr></thead>
+              <tbody>
+                <tr><td><strong>SM-01</strong> soil moisture probe</td><td>Zone 1 · centre</td><td class="num">72% · 10:22 AM</td><td class="num">88%</td><td><span class="pill">Strong</span></td></tr>
+                <tr><td><strong>SM-02</strong> soil moisture probe</td><td>Zone 2 · north</td><td class="num">66% · 10:20 AM</td><td class="num">74%</td><td><span class="pill">Strong</span></td></tr>
+                <tr><td><strong>SM-03</strong> soil moisture probe</td><td>Zone 3 · south</td><td class="num">61% · 10:18 AM</td><td class="num">61%</td><td><span class="pill">Strong</span></td></tr>
+                <tr><td><strong>TH-01</strong> temperature &amp; humidity</td><td>Zone 1 · shade</td><td class="num">29 °C / 62% · 10:21 AM</td><td class="num">92%</td><td><span class="pill">Strong</span></td></tr>
+                <tr><td><strong>ST-01</strong> soil temperature</td><td>Zone 2 · 10 cm</td><td class="num">24.8 °C · 10:19 AM</td><td class="num">80%</td><td><span class="pill amber">Fair</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+      </section>
+
+      <!-- =========================== IRRIGATION ============================== -->
+      <section class="page" id="page-irrigation">
+        <article class="card" style="margin-bottom:16px">
+          <div class="card-head"><svg class="icon"><use href="#i-droplet"/></svg><h3>Irrigation Pump</h3><span class="spacer"></span><span class="pill" id="pumpPill">Running · solar direct</span></div>
+          <div class="pump-panel">
+            <div class="pump-ring" id="pumpRing"><svg class="icon icon-lg"><use href="#i-power"/></svg></div>
+            <div class="pump-copy">
+              <strong id="pumpTitle">Pump is ON</strong>
+              <span id="pumpDesc">Running on solar power · 3.2 kW draw · Zone 1 sprinklers active</span>
+            </div>
+            <div class="pump-actions">
+              <button class="switch on" id="pumpSwitch" role="switch" aria-checked="true" aria-label="Toggle irrigation pump"></button>
+              <button class="btn btn-ghost btn-sm" data-toast="Schedule saved (demo)."><svg class="icon"><use href="#i-calendar"/></svg> Schedule</button>
+              <button class="btn btn-primary btn-sm" data-toast="Pump command sent (demo)."><svg class="icon"><use href="#i-play"/></svg> Run cycle</button>
+            </div>
+          </div>
+          <div class="mini-grid pump-stats" style="margin-top:14px">
+            <div class="mini"><span>Pump energy today</span><strong>18.6<small>kWh</small></strong></div>
+            <div class="mini"><span>Water delivered</span><strong>12,400<small>L</small></strong></div>
+            <div class="mini"><span>Run time today</span><strong>5<small>h 48m</small></strong></div>
+            <div class="mini"><span>Solar share</span><strong>94<small>%</small></strong></div>
+          </div>
+        </article>
+
+        <div class="two-col" style="margin-bottom:16px">
+          <article class="card">
+            <div class="card-head"><svg class="icon"><use href="#i-calendar"/></svg><h3>Irrigation Schedule</h3><span class="spacer"></span><span class="pill gray">Auto · solar window</span></div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Time</th><th>Zone</th><th>Duration</th><th>Mode</th><th>Status</th></tr></thead>
+                <tbody>
+                  <tr><td class="num">06:30 AM</td><td>Zone 1 · Tomato</td><td>45 min</td><td>Solar direct</td><td><span class="pill">Completed</span></td></tr>
+                  <tr><td class="num">10:15 AM</td><td>Zone 1 · Tomato</td><td>50 min</td><td>Solar direct</td><td><span class="pill blue">Running</span></td></tr>
+                  <tr><td class="num">01:00 PM</td><td>Zone 2 · Chilli</td><td>40 min</td><td>Solar direct</td><td><span class="pill gray">Scheduled</span></td></tr>
+                  <tr><td class="num">03:30 PM</td><td>Zone 3 · Leafy</td><td>35 min</td><td>Battery assist</td><td><span class="pill gray">Scheduled</span></td></tr>
+                  <tr><td class="num">05:45 PM</td><td>Zone 1 · Tomato</td><td>25 min</td><td>Battery assist</td><td><span class="pill gray">Scheduled</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-head"><svg class="icon"><use href="#i-sprout"/></svg><h3>Zone Status</h3></div>
+            <div class="zone-grid" style="grid-template-columns:repeat(auto-fit,minmax(150px,1fr))">
+              <div class="zone">
+                <div class="zone-top"><strong>Zone 1</strong><span class="pill">Active</span></div>
+                <p>Tomato · sprinkler</p>
+                <div class="meter-track"><div class="meter-fill" style="width:72%"></div></div>
+                <p style="margin-top:6px">Moisture 72%</p>
+              </div>
+              <div class="zone">
+                <div class="zone-top"><strong>Zone 2</strong><span class="pill gray">Idle</span></div>
+                <p>Chilli · drip</p>
+                <div class="meter-track"><div class="meter-fill" style="width:66%"></div></div>
+                <p style="margin-top:6px">Moisture 66%</p>
+              </div>
+              <div class="zone">
+                <div class="zone-top"><strong>Zone 3</strong><span class="pill amber">Monitor</span></div>
+                <p>Leafy vegetables · drip</p>
+                <div class="meter-track"><div class="meter-fill amber" style="width:61%"></div></div>
+                <p style="margin-top:6px">Moisture 61%</p>
+              </div>
+            </div>
+            <div class="note" style="margin-top:14px">
+              <svg class="icon"><use href="#i-bulb"/></svg>
+              <span>Running the pump between 10 AM and 3 PM uses peak solar output and reduces battery draw.</span>
+            </div>
+          </article>
+        </div>
+
+        <div class="equal-3">
+          <article class="card">
+            <div class="card-head"><svg class="icon"><use href="#i-gauge"/></svg><h3>Pump Health</h3></div>
+            <dl class="detail-grid" style="grid-template-columns:minmax(0,1fr)">
+              <div class="detail"><dt>Motor rating</dt><dd>3 HP submersible</dd></div>
+              <div class="detail"><dt>Operating hours</dt><dd>1,284 h total</dd></div>
+              <div class="detail"><dt>Last servicing</dt><dd>22 Sep 2026</dd></div>
+              <div class="detail"><dt>Vibration</dt><dd>Normal</dd></div>
+              <div class="detail"><dt>Status</dt><dd><span class="pill">Healthy</span></dd></div>
+            </dl>
+          </article>
+          <article class="card">
+            <div class="card-head"><svg class="icon"><use href="#i-droplet"/></svg><h3>Water Source</h3></div>
+            <dl class="detail-grid" style="grid-template-columns:minmax(0,1fr)">
+              <div class="detail"><dt>Borewell depth</dt><dd>180 ft</dd></div>
+              <div class="detail"><dt>Static water level</dt><dd>42 ft</dd></div>
+              <div class="detail"><dt>Farm pond</dt><dd>62% capacity</dd></div>
+              <div class="detail"><dt>Water quality</dt><dd>Within normal range</dd></div>
+            </dl>
+          </article>
+          <article class="card">
+            <div class="card-head"><svg class="icon"><use href="#i-layers"/></svg><h3>Consumption</h3></div>
+            <div class="meter" style="margin-bottom:14px"><div class="meter-top"><span>Pump share of usage</span><strong>68%</strong></div><div class="meter-track"><div class="meter-fill" style="width:68%"></div></div></div>
+            <div class="meter" style="margin-bottom:14px"><div class="meter-top"><span>Solar coverage</span><strong>94%</strong></div><div class="meter-track"><div class="meter-fill blue" style="width:94%"></div></div></div>
+            <div class="meter"><div class="meter-top"><span>Grid draw</span><strong>6%</strong></div><div class="meter-track"><div class="meter-fill amber" style="width:6%"></div></div></div>
+          </article>
+        </div>
+      </section>
+
+      <!-- =============================== REPORTS ============================= -->
+      <section class="page" id="page-reports">
+        <div class="page-head">
+          <div>
+            <h2>Energy &amp; savings summary</h2>
+            <p>Monthly generation, consumption and illustrative savings for Green Valley Farm.</p>
+          </div>
+          <span class="spacer"></span>
+          <div style="display:flex;gap:9px;flex-wrap:wrap">
+            <button class="btn btn-ghost" id="printBtn"><svg class="icon"><use href="#i-print"/></svg> Print</button>
+            <button class="btn btn-primary" id="csvBtn"><svg class="icon"><use href="#i-download"/></svg> Download CSV</button>
+          </div>
+        </div>
+
+        <div class="stat-grid">
+          <article class="stat green">
+            <div class="stat-top"><span class="stat-ico"><svg class="icon"><use href="#i-zap"/></svg></span><span class="stat-label">Generated (Nov 2026)</span></div>
+            <p class="stat-value">1,046<span>kWh</span></p><p class="stat-sub">22 generation days</p>
+          </article>
+          <article class="stat blue">
+            <div class="stat-top"><span class="stat-ico"><svg class="icon"><use href="#i-droplet"/></svg></span><span class="stat-label">Consumed on farm</span></div>
+            <p class="stat-value">682<span>kWh</span></p><p class="stat-sub">Pump 68% · other loads 32%</p>
+          </article>
+          <article class="stat amber">
+            <div class="stat-top"><span class="stat-ico"><svg class="icon"><use href="#i-battery"/></svg></span><span class="stat-label">Stored / exported</span></div>
+            <p class="stat-value">364<span>kWh</span></p><p class="stat-sub">Battery 96 kWh · grid 268 kWh</p>
+          </article>
+          <article class="stat violet">
+            <div class="stat-top"><span class="stat-ico"><svg class="icon"><use href="#i-card"/></svg></span><span class="stat-label">Estimated savings</span></div>
+            <p class="stat-value">₹ 4,318</p><p class="stat-sub">Illustrative only</p>
+          </article>
+        </div>
+
+        <div class="two-col" style="margin-bottom:16px">
+          <article class="card">
+            <div class="card-head"><svg class="icon"><use href="#i-chart"/></svg><h3>Monthly Summary</h3><span class="spacer"></span><span class="pill gray">Last 6 months</span></div>
+            <div class="table-wrap">
+              <table id="reportTable">
+                <thead><tr><th>Month</th><th>Generated</th><th>Consumed</th><th>Exported</th><th>Savings</th><th>Status</th></tr></thead>
+                <tbody>
+                  <tr><td><strong>Nov 2026</strong></td><td class="num">1,046 kWh</td><td class="num">682 kWh</td><td class="num">268 kWh</td><td class="num">₹ 4,318</td><td><span class="pill">On track</span></td></tr>
+                  <tr><td><strong>Oct 2026</strong></td><td class="num">1,192 kWh</td><td class="num">742 kWh</td><td class="num">356 kWh</td><td class="num">₹ 5,006</td><td><span class="pill">Closed</span></td></tr>
+                  <tr><td><strong>Sep 2026</strong></td><td class="num">1,268 kWh</td><td class="num">806 kWh</td><td class="num">372 kWh</td><td class="num">₹ 5,326</td><td><span class="pill">Closed</span></td></tr>
+                  <tr><td><strong>Aug 2026</strong></td><td class="num">1,154 kWh</td><td class="num">834 kWh</td><td class="num">246 kWh</td><td class="num">₹ 4,847</td><td><span class="pill">Closed</span></td></tr>
+                  <tr><td><strong>Jul 2026</strong></td><td class="num">1,028 kWh</td><td class="num">788 kWh</td><td class="num">186 kWh</td><td class="num">₹ 4,318</td><td><span class="pill amber">Monsoon</span></td></tr>
+                  <tr><td><strong>Jun 2026</strong></td><td class="num">1,306 kWh</td><td class="num">812 kWh</td><td class="num">402 kWh</td><td class="num">₹ 5,485</td><td><span class="pill">Closed</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="note" style="margin-top:16px">
+              <svg class="icon"><use href="#i-info"/></svg>
+              <span>Savings are classroom estimates based on an illustrative ₹4.20/kWh tariff — not an approved tariff or guarantee.</span>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-head"><svg class="icon"><use href="#i-activity"/></svg><h3>Generation Trend</h3></div>
+            <div class="bars" id="reportBars"></div>
+            <div class="chart-legend" style="margin-top:12px">
+              <span class="legend-item"><span class="legend-swatch" style="background:#1e9e57"></span> Monthly generation (kWh)</span>
+            </div>
+            <div class="note" style="margin-top:16px">
+              <svg class="icon"><use href="#i-file"/></svg>
+              <span>Reports can later be generated from live inverter and meter data once compatible hardware is connected.</span>
+            </div>
+          </article>
+        </div>
+
+        <article class="card">
+          <div class="card-head"><svg class="icon"><use href="#i-file"/></svg><h3>Available Reports</h3></div>
+          <div class="doc-list">
+            <button class="doc" data-toast="Monthly statement queued (demo)."><span class="doc-ico"><svg class="icon"><use href="#i-file"/></svg></span><span><strong>Monthly energy statement — Nov 2026</strong><span>Generation, consumption, export and billing summary</span></span><svg class="icon icon-sm"><use href="#i-download"/></svg></button>
+            <button class="doc" data-toast="Maintenance log queued (demo)."><span class="doc-ico"><svg class="icon"><use href="#i-wrench"/></svg></span><span><strong>Maintenance &amp; service log</strong><span>Inspections, cleaning and repairs since commissioning</span></span><svg class="icon icon-sm"><use href="#i-download"/></svg></button>
+            <button class="doc" data-toast="System performance report queued (demo)."><span class="doc-ico"><svg class="icon"><use href="#i-gauge"/></svg></span><span><strong>System performance report</strong><span>Performance ratio, downtime and peak output analysis</span></span><svg class="icon icon-sm"><use href="#i-download"/></svg></button>
+          </div>
+        </article>
+      </section>
+
+      <!-- =============================== SETTINGS =========================== -->
+      <section class="page" id="page-settings">
+        <div class="two-col" style="margin-bottom:16px">
+          <article class="card">
+            <div class="card-head"><svg class="icon"><use href="#i-user"/></svg><h3>Account Details</h3><span class="spacer"></span><span class="pill gray">Owner</span></div>
+            <form class="form-grid" id="accountForm">
+              <label class="field"><span>Full name</span>
+                <input type="text" value="Shailendra Reddy" /></label>
+              <label class="field"><span>Mobile number</span>
+                <input type="tel" value="+91 98••• ••210" /></label>
+              <label class="field"><span>Email address</span>
+                <input type="email" value="s.reddy@greenvalleyfarm.in" /></label>
+              <label class="field"><span>Farm name</span>
+                <input type="text" value="Green Valley Farm" /></label>
+              <label class="field" style="grid-column:1/-1"><span>Address</span>
+                <input type="text" value="Survey No. 142/2, Nandyal Road, Kurnool, Andhra Pradesh 518001" /></label>
+            </form>
+            <div style="display:flex;gap:9px;margin-top:18px;flex-wrap:wrap">
+              <button class="btn btn-primary" data-toast="Account details saved (demo)."><svg class="icon"><use href="#i-check"/></svg> Save changes</button>
+              <button class="btn btn-ghost" data-toast="Demo prototype — nothing was sent.">Cancel</button>
+            </div>
+          </article>
+
+          <div class="stack">
+            <article class="card">
+              <div class="card-head"><svg class="icon"><use href="#i-bell"/></svg><h3>Notifications</h3></div>
+              <div class="switch-row">
+                <div class="switch-copy"><strong>System alerts</strong><span>Inverter faults, pump failures and abnormal readings</span></div>
+                <button class="switch on" role="switch" aria-checked="true" aria-label="System alerts"></button>
+              </div>
+              <div class="switch-row">
+                <div class="switch-copy"><strong>Daily summary email</strong><span>Generation, usage and battery status each evening</span></div>
+                <button class="switch on" role="switch" aria-checked="true" aria-label="Daily summary email"></button>
+              </div>
+              <div class="switch-row">
+                <div class="switch-copy"><strong>SMS for critical faults</strong><span>Text message when the pump or inverter stops unexpectedly</span></div>
+                <button class="switch" role="switch" aria-checked="false" aria-label="SMS for critical faults"></button>
+              </div>
+              <div class="switch-row">
+                <div class="switch-copy"><strong>Maintenance reminders</strong><span>Panel cleaning and inspection schedule</span></div>
+                <button class="switch on" role="switch" aria-checked="true" aria-label="Maintenance reminders"></button>
+              </div>
+            </article>
+
+            <article class="card">
+              <div class="card-head"><svg class="icon"><use href="#i-gauge"/></svg><h3>Alert Thresholds</h3></div>
+              <div class="meter" style="margin-bottom:16px">
+                <div class="meter-top"><span>Low battery warning</span><strong>20%</strong></div>
+                <input type="range" min="5" max="50" value="20" class="range" style="width:100%;margin-top:8px;accent-color:#1e9e57" aria-label="Low battery warning threshold" />
+              </div>
+              <div class="meter">
+                <div class="meter-top"><span>Low soil moisture warning</span><strong>45%</strong></div>
+                <input type="range" min="20" max="70" value="45" class="range" style="width:100%;margin-top:8px;accent-color:#1e9e57" aria-label="Low soil moisture warning threshold" />
+              </div>
+              <button class="btn btn-ghost btn-sm" style="margin-top:18px" data-toast="Alert thresholds updated (demo)."><svg class="icon"><use href="#i-check"/></svg> Update thresholds</button>
+            </article>
+          </div>
+        </div>
+
+        <div class="equal-3">
+          <article class="card">
+            <div class="card-head"><svg class="icon"><use href="#i-panel"/></svg><h3>System Configuration</h3></div>
+            <dl class="detail-grid" style="grid-template-columns:minmax(0,1fr)">
+              <div class="detail"><dt>Installed capacity</dt><dd>10 kWp</dd></div>
+              <div class="detail"><dt>Battery</dt><dd>Connected · 5 kWh</dd></div>
+              <div class="detail"><dt>Metering</dt><dd>Net metering</dd></div>
+              <div class="detail"><dt>Gateway</dt><dd>Online · last sync 10:24 AM</dd></div>
+            </dl>
+          </article>
+          <article class="card">
+            <div class="card-head"><svg class="icon"><use href="#i-lock"/></svg><h3>Security</h3></div>
+            <dl class="detail-grid" style="grid-template-columns:minmax(0,1fr)">
+              <div class="detail"><dt>Password</dt><dd>Last changed 12 Aug 2026</dd></div>
+              <div class="detail"><dt>Two-factor auth</dt><dd><span class="pill amber">Recommended</span></dd></div>
+              <div class="detail"><dt>Active sessions</dt><dd>2 devices</dd></div>
+            </dl>
+            <button class="btn btn-ghost btn-sm" style="margin-top:14px" data-toast="Password reset link sent (demo)."><svg class="icon"><use href="#i-mail"/></svg> Reset password</button>
+          </article>
+          <article class="card">
+            <div class="card-head"><svg class="icon"><use href="#i-info"/></svg><h3>About This Prototype</h3></div>
+            <p style="font-size:12.3px;line-height:1.6;color:var(--muted)">
+              Eco Farm Tech is a student venture concept. This dashboard is a digital prototype — it is not connected to an installed solar system and shows illustrative demo values only.
+            </p>
+            <div class="owner-tags" style="margin-top:12px">
+              <span class="pill gray">Version 1.0</span>
+              <span class="pill gray">Demo data</span>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <footer class="foot">
+        <span><strong>Eco Farm Tech</strong> · Solar-powered electricity for sustainable farming</span>
+        <span>Prototype dashboard · illustrative values · © 2026 Eco Farm Tech</span>
+      </footer>
+    </main>
+  </div>
+</div>
+
+<div class="toast" id="toast"><svg class="icon icon-sm"><use href="#i-check"/></svg><span id="toastText">Saved</span></div>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
